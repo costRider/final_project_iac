@@ -1,17 +1,17 @@
 project_name = "finalproj"
-environment  = "dev"
+environment  = "prd"
 aws_region   = "ap-northeast-2"
 region_code  = "apne2"
 
 cluster_name    = "k8s-eks"
 cluster_version = "1.30"
 
-vpc_cidr = "10.10.10.0/20"
+vpc_cidr = "10.30.10.0/20"
 
-public_subnet_cidrs       = ["10.10.10.0/24", "10.10.11.0/24"]
-private_mgmt_subnet_cidrs = ["10.10.12.0/24", "10.10.13.0/24"]
-private_app_subnet_cidrs  = ["10.10.14.0/24", "10.10.15.0/24"]
-private_db_subnet_cidrs   = ["10.10.16.0/24", "10.10.17.0/24"]
+public_subnet_cidrs       = ["10.30.10.0/24", "10.30.11.0/24"]
+private_mgmt_subnet_cidrs = ["10.30.12.0/24", "10.30.13.0/24"]
+private_app_subnet_cidrs  = ["10.30.14.0/24", "10.30.15.0/24"]
+private_db_subnet_cidrs   = ["10.30.16.0/24", "10.30.17.0/24"]
 
 azs = ["ap-northeast-2a", "ap-northeast-2c"]
 
@@ -34,4 +34,4 @@ node_min_size      = 1
 node_max_size      = 4
 
 owner       = "mklee"
-cost_center = "petclinic-lab"
+cost_center = "petclinic-prd"
