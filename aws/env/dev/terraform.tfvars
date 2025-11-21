@@ -17,7 +17,7 @@ private_db_subnet_cidrs   = ["10.10.16.0/24", "10.10.17.0/24"]
 
 azs = ["ap-northeast-2a", "ap-northeast-2c"]
 
-my_ip_cidr = "180.70.43.251/32"
+my_ip_cidr   = "180.70.43.251/32"
 ssh_key_name = "academyKey"
 
 bastion_ami_id        = "ami-0aa02302a11ea5190"

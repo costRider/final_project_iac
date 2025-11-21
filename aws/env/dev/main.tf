@@ -24,7 +24,7 @@ module "network" {
 }
 
 module "eks" {
-  source = "../../../modules/eks"
+  source = "../../modules/eks"
 
   project_name    = var.project_name
   cluster_name    = var.cluster_name
@@ -44,7 +44,7 @@ module "eks" {
   node_desired_size  = var.node_desired_size
   node_min_size      = var.node_min_size
   node_max_size      = var.node_max_size
-  node_disk_siez     = var.node_disk_size
+  node_disk_size     = var.node_disk_size
 
   common_tags = local.common_tags
 }
