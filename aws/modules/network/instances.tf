@@ -1,3 +1,5 @@
+# This file provisions bastion and management instances within the network module.
+
 resource "aws_instance" "bastion" {
   ami                         = var.bastion_ami_id
   instance_type               = var.instance_type_bastion

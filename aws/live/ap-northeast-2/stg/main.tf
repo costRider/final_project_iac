@@ -1,5 +1,7 @@
+# This environment file assembles network and EKS modules for the ap-northeast-2 staging stack.
+
 module "network" {
-  source = "../../modules/network"
+  source = "../../../modules/network"
 
   project_name              = var.project_name
   environment               = var.environment
@@ -22,7 +24,7 @@ module "network" {
 }
 
 module "eks" {
-  source = "../../modules/eks"
+  source = "../../../modules/eks"
 
   project_name    = var.project_name
   cluster_name    = var.cluster_name

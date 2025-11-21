@@ -1,3 +1,5 @@
+# This file lists variable declarations for the staging environment stack.
+
 variable "project_name" { type = string }
 variable "environment" { type = string }
 variable "aws_region" { type = string }

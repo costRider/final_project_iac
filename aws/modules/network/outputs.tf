@@ -1,3 +1,5 @@
+# This file exports network attributes such as VPC, subnet, and security group IDs.
+
 output "vpc_id" {
   description = "생성된 VPC ID"
   value       = aws_vpc.this.id

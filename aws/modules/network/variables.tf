@@ -1,3 +1,5 @@
+# This file enumerates variable definitions for configuring the network module.
+
 variable "project_name" {
   description = "프로젝트 명 prefix(태그/이름에 사용)"
   type        = string
