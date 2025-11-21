@@ -163,7 +163,7 @@ resource "aws_eks_node_group" "app" {
 
   instance_types = var.node_instance_types_app
 
-  disk_size = var.node_disk_siez
+  disk_size = var.node_disk_size
 
   //labels = var.node_lables
 
@@ -211,7 +211,7 @@ resource "aws_eks_node_group" "obs" {
 
   instance_types = var.node_instance_types_obs
 
-  disk_size = var.node_disk_siez
+  disk_size = var.node_disk_size
 
   //labels = var.node_lables
 
@@ -259,7 +259,7 @@ resource "aws_eks_node_group" "default" {
 
   instance_types = var.node_instance_types_default
 
-  disk_size = var.node_disk_siez
+  disk_size = var.node_disk_size
 
   //labels = var.node_lables
 

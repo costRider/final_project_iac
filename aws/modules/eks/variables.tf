@@ -88,10 +88,10 @@ variable "node_max_size" {
   default = 4
 }
 
-variable "node_disk_siez" {
+variable "node_disk_size" {
   description = "워커 노드 EBS 디스크 사이즈(GiB)"
-  type = number
-  default = 30
+  type        = number
+  default     = 30
 }
 
 
