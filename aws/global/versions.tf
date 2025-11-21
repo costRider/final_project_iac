@@ -1,3 +1,5 @@
+# This file sets Terraform and provider version constraints for AWS deployments.
+
 terraform {
  required_version = ">= 1.5.0"
 

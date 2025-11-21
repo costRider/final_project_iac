@@ -1,3 +1,5 @@
+# This file defines routing tables and associations for the shared network module.
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 

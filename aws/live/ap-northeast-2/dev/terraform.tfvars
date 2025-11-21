@@ -1,3 +1,5 @@
+# This file supplies dev environment variable values for the ap-northeast-2 deployment.
+
 project_name = "finalproj"
 environment  = "dev"
 aws_region   = "ap-northeast-2"

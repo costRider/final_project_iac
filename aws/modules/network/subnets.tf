@@ -1,3 +1,5 @@
+# This file creates public and private subnets for the shared network module.
+
 resource "aws_subnet" "public" {
   count = length(var.public_subnet_cidrs)
 

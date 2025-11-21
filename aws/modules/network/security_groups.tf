@@ -1,3 +1,5 @@
+# This file configures security groups and rules for the shared network module.
+
 resource "aws_security_group" "bastion" {
   name        = "${local.name_prefix}-net-sg-bastion-01"
   description = "Bastion SSH"

@@ -1,3 +1,5 @@
+# This file configures Terraform and the AWS provider for the dev environment.
+
 terraform {
   required_version = ">= 1.5.0"
 

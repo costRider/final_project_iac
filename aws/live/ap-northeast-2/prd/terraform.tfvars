@@ -1,3 +1,5 @@
+# This file supplies production environment variable values for the ap-northeast-2 deployment.
+
 project_name = "finalproj"
 environment  = "prd"
 aws_region   = "ap-northeast-2"

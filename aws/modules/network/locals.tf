@@ -1,3 +1,5 @@
+# This file declares calculated local values used across the network module.
+
 locals {
   region_code = coalesce(
     var.region_code,

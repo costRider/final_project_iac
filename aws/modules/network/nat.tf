@@ -1,3 +1,5 @@
+# This file manages NAT gateway resources for the shared network module.
+
 resource "aws_eip" "nat" {
   count  = length(var.azs)
   domain = "vpc"
