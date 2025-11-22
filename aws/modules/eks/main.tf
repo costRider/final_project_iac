@@ -307,7 +307,7 @@ resource "aws_eks_node_group" "default" {
 ##########################################
 resource "aws_eks_access_entry" "mgmt" {
   cluster_name  = aws_eks_cluster.this.name
-  principal_arn = var.mgmt_profile_arn
+  principal_arn = var.mgmt_role_arn
   type = "STANDARD"   # EC2 또는 STANDARD 사용
 
   depends_on    = [aws_eks_cluster.this]

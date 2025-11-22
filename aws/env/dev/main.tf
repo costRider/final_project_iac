@@ -43,7 +43,7 @@ module "instance" {
   region_code           = var.region_code
   azs                   = var.azs
   public_subnet_ids     = module.network.public_subnet_ids
-  private_subnet_ids    = module.network.private_route_table_ids
+  mgmt_subnet_ids       = module.network.mgmt_subnet_ids
   bastion_sg_id         = module.network.bastion_sg_id
   mgmt_sg_id            = module.network.mgmt_sg_id
   bastion_ami_id        = var.bastion_ami_id
@@ -51,9 +51,12 @@ module "instance" {
   ssh_key_name          = var.ssh_key_name
   instance_type_bastion = var.instance_type_bastion
   instance_type_mgmt    = var.instance_type_mgmt
-  mgmt_role_name        = module.iam.mgmt_role_name
+  mgmt_profile_name     = module.iam.mgmt_profile_name
   common_tags           = local.common_tags
+  cluster_name          = var.cluster_name
+  cluster_version       = var.cluster_version
 
+  depends_on = [module.eks]
 }
 
 module "network" {
@@ -97,7 +100,7 @@ module "eks" {
   node_min_size      = var.node_min_size
   node_max_size      = var.node_max_size
   node_disk_size     = var.node_disk_size
-  mgmt_profile_arn   = module.iam.mgmt_profile_arn
+  mgmt_role_arn      = module.iam.mgmt_role_arn
 
   common_tags = local.common_tags
 }

@@ -42,17 +42,54 @@ resource "aws_iam_role" "mgmt" {
   })
 }
 
-# Role에 적용할 정책 생성
-resource "aws_iam_role_policy_attachment" "mgmt_ssm" {
-  role       = aws_iam_role.mgmt.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# EKS Cluster 컨트롤 IAM 정책 생성 
+resource "aws_iam_policy" "mgmt_eks_required_api" {
+  name        = "${var.project_name}-mgmt-eks-required-api"
+  description = "Required IAM permissions to access EKS clusters as per AWS documentation"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "EksRequiredAPIActions",
+        Effect = "Allow",
+        Action = [
+          "eks:AccessKubernetesApi",
+          "eks:DescribeCluster",
+          "eks:ListClusters",
+          "eks:DescribeNodegroup",
+          "eks:ListNodegroups",
+          "eks:DescribeAddonVersions",
+          "eks:ListAddons",
+          "eks:DescribeAddon",
+          "eks:ListUpdates",
+          "eks:DescribeUpdate",
+          "eks:ListFargateProfiles",
+          "eks:DescribeFargateProfile",
+          "eks:ListIdentityProviderConfigs",
+          "eks:DescribeIdentityProviderConfig"
+        ],
+        Resource = "*"
+      },
+      {
+        Sid    = "IamAndSts",
+        Effect = "Allow",
+        Action = [
+          "iam:GetRole",
+          "iam:GetOpenIDConnectProvider",
+          "sts:AssumeRole"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
 }
 
-resource "aws_iam_role_policy_attachment" "mgmt_eks" {
+# 생성한 정책 붙이기
+resource "aws_iam_role_policy_attachment" "mgmt_eks_required_api_attach" {
   role       = aws_iam_role.mgmt.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  policy_arn = aws_iam_policy.mgmt_eks_required_api.arn
 }
-
 
 # Role + 정책 매핑한 역할 생성
 resource "aws_iam_instance_profile" "mgmt" {

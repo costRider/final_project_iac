@@ -28,13 +28,18 @@
 #   - providers/backend는 env(dev,stg,prd) 단위에서 적용됩니다.
 ###############################################
 
-output "mgmt_role_name"{
-    description = "mgmt 권한 Role Name"
-    value = aws_iam_role.mgmt.name
+output "mgmt_role_arn"{
+  description = "mgmt 권한 Role arn"
+  value = aws_iam_role.mgmt.arn
 }
 
 output "mgmt_profile_arn" {
   description = "MGMT EC2에 할당할 EKS 컨트롤 프로필 ARN"
   value = aws_iam_instance_profile.mgmt.arn
+}
+
+output "mgmt_profile_name" {
+  description = "MGMT EC2에 할당할 EKS 컨트롤 프로필 NAME"
+  value = aws_iam_instance_profile.mgmt.name
 }
 

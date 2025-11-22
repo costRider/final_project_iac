@@ -122,7 +122,7 @@ variable "node_disk_size" {
   default     = 30
 }
 
-variable "mgmt_profile_arn" {
+variable "mgmt_role_arn" {
   description = "AccessEntry principal ARN Cluster 접근용 Role"
   type = string
 }
