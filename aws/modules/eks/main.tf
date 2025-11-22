@@ -5,11 +5,11 @@
 #
 # 설명:
 #   - 목적: AWS 환경 EKS 모듈
-#   - 구성요소: EKS iam role + 정책, cluster, node, cluster security group
+#   - 구성요소: EKS iam role + 정책, cluster, node, cluster security group, 접근 권한 설정
 #
 # 관리 정보:
 #   - 최초 작성일: 2025-11-22
-#   - 최근 수정일: 2025-11-22
+#   - 최근 수정일: 2025-11-23
 #   - 작성자: LMK
 #   - 마지막 수정자: LMK
 #
@@ -19,6 +19,7 @@
 #
 # 변경 이력:
 #   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
+#   - 2025-11-23 / EC2 MGMT 접근 권한 업데이트 / 작성자: LMK
 #
 # 주의 사항:
 #   - 이 모듈은 <AWS> 전용입니다.
@@ -154,6 +155,10 @@ resource "aws_eks_cluster" "this" {
     #cluster_ip CIDR - 기본 값 쓰려면 생략 가능, 명시하고 싶으면 설정
     #service_ipv4_cidr = "192.10.0.0/16"
     service_ipv4_cidr = "192.168.0.0/16"
+  }
+  # API 기반으로도 접근하고 Config 기반으로도 접근하기 위함
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
   }
 
   tags = var.common_tags
@@ -296,4 +301,30 @@ resource "aws_eks_node_group" "default" {
   aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
   ]
 }
+
+##########################################
+# AccessEntry로 MGMT EC2 IAM을 EKS admin으로 등록 / API기반 접근
+##########################################
+resource "aws_eks_access_entry" "mgmt" {
+  cluster_name  = aws_eks_cluster.this.name
+  principal_arn = var.mgmt_profile_arn
+  type = "STANDARD"   # EC2 또는 STANDARD 사용
+
+  depends_on    = [aws_eks_cluster.this]
+}
+
+# 등록한 내용에 대해 어떤 역할을 부여할 것인지 연결
+resource "aws_eks_access_policy_association" "mgmt_admin" {
+  cluster_name  = aws_eks_cluster.this.name
+  principal_arn = aws_eks_access_entry.mgmt.principal_arn
+
+  policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"   # 전체 클러스터 범위
+  }
+
+  depends_on    = [aws_eks_access_entry.mgmt]
+}
+
 

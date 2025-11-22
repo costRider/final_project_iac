@@ -89,31 +89,6 @@ variable "my_ip_cidr" {
   type        = string
 }
 
-variable "bastion_ami_id" {
-  description = "베스천 AMI ID"
-  type        = string
-}
-
-variable "mgmt_ami_id" {
-  description = "관리용 EC2 AMI ID"
-  type        = string
-}
-
-variable "ssh_key_name" {
-  description = "SSH 키페어 이름"
-  type        = string
-}
-
-variable "instance_type_bastion" {
-  description = "베스천 인스턴스 타입"
-  type        = string
-}
-
-variable "instance_type_mgmt" {
-  description = "관리용 인스턴스 타입"
-  type        = string
-}
-
 variable "common_tags" {
   description = "공통 태그"
   type        = map(string)

@@ -44,14 +44,14 @@ CIDR = 10.10.42.0/24
 
 | 용도 | AZ | CIDR | 예시 이름 |
 |------|----|---------|-----------|
-| Public | a | 10.12.10.0/24 | finalproj-prd-aws-apne2a-net-subnet-pub-01 |
-| Public | c | 10.12.12.0/24 | finalproj-prd-aws-apne2c-net-subnet-pub-01 |
-| Management | a | 12.12.20.0/24 | finalproj-prd-aws-apne2a-mgmt-subnet-pri-01 |
-| Management | c | 12.12.22.0/24 | finalproj-prd-aws-apne2c-mgmt-subnet-pri-01 |
-| App | a | 10.12.30.0/24 | finalproj-prd-aws-apne2a-app-subnet-prv-01 |
-| App | c | 10.12.32.0/24 | finalproj-prd-aws-apne2c-app-subnet-prv-01 |
-| DB | a | 10.12.40.0/24 | finalproj-prd-aws-apne2a-db-subnet-prv-01 |
-| DB | c | 10.12.42.0/24 | finalproj-prd-aws-apne2c-db-subnet-prv-01 |
+| Public | a | 10.12.10.0/24 | finalproj-aws-prd-apne2a-net-subnet-pub-01 |
+| Public | c | 10.12.12.0/24 | finalproj-aws-prd-apne2c-net-subnet-pub-01 |
+| Management | a | 12.12.20.0/24 | finalproj-aws-prd-apne2a-mgmt-subnet-pri-01 |
+| Management | c | 12.12.22.0/24 | finalproj-aws-prd-apne2c-mgmt-subnet-pri-01 |
+| App | a | 10.12.30.0/24 | finalproj-aws-prd-apne2a-app-subnet-prv-01 |
+| App | c | 10.12.32.0/24 | finalproj-aws-prd-apne2c-app-subnet-prv-01 |
+| DB | a | 10.12.40.0/24 | finalproj-aws-prd-apne2a-db-subnet-prv-01 |
+| DB | c | 10.12.42.0/24 | finalproj-aws-prd-apne2c-db-subnet-prv-01 |
 
 
 ### 3.2 GCP 예시 (10.20.0.0/16) - 미정

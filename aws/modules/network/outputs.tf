@@ -82,13 +82,3 @@ output "private_route_table_ids" {
   description = "프라이빗 라우트 테이블 ID"
   value       = [for s in aws_route_table.private : s.id]
 }
-
-output "bastion_public_ip" {
-  description = "Bastion 퍼블릭 IP"
-  value       = aws_instance.bastion.public_ip
-}
-
-output "mgmt_private_ip" {
-  description = "MGMT 프라이빗 IP"
-  value       = aws_instance.mgmt.private_ip
-}
