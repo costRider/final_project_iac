@@ -6,91 +6,77 @@ AWS와 GCP VPC를 **대칭 구조**로 구성하는 것을 목표로 한다.
 ---
 
 ## 1. 설계 원칙
-1. 환경(dev/stg/prd)별 고유 CIDR
-2. AWS / GCP 간 충돌 없는 대역 설계
+1. Cloud 별 CIDR 구성
+2. AWS / GCP 간 충돌 없는 대역 설계(IP로 구분가능)
 3. Subnet 타입(Public/App/DB) 규칙 고정
-4. DR에서 구조적 대응 가능하도록 패턴 유지
+4. 고정 IP 규칙 적용(필요시)
+5. Terraform 변수 구조 예시
+6. 예외 CIDR 기록
 
 ---
 
-## 2. 환경별 CIDR 블록
+## 2. 클라우드별 VPC CIDR 규칙
 
-| Env | Base CIDR |
-|-----|-----------|
-| dev | 10.10.0.0/16 |
-| stg | 10.20.0.0/16 |
-| prd | 10.30.0.0/16 |
+{project_general}.{cloud_code/env_code}.{subnet/az}.{0}/24
 
----
+- 첫번째 옥텟
+project_general: 10
 
-## 3. 클라우드별 VPC CIDR 규칙
+- 두번째 옥텟
+cloud_code: aws=1#, gcp=2#
+env_code: dev=#0, stg=#1, prd=#2
 
-env별 /16에서 cloud별로 /20 또는 /16 분리:
+- 세번째 옥텟
+subent: public=1#, mgmt=2#, app=3#, db=4#
+AZ: a=#0 ,b=#1, c=#2, d=#3 
 
-env_code: dev=10, stg=20, prd=30  
-cloud_code: aws=10, gcp=20
-
-### 예시(PRD)
-- AWS VPC: `10.30.10.0/20`
-- GCP VPC: `10.30.20.0/20`
-
-DEV/STG도 동일 패턴 적용.
+### 예시 AWS의 개발환경 DB의 가용영역 C의 대역
+CIDR = 10.10.42.0/24
 
 ---
 
-## 4. 서브넷 CIDR 규칙
+## 3. 서브넷 CIDR 규칙
 
 각 VPC 내에서 `/24` 단위 Subnet 구성.  
 3번째 옥텟을 역할로 구분.
 
-### 4.1 AWS 예시 (10.30.10.0/20)
+### 3.1 AWS 예시 (10.10.0.0/16)
 
 | 용도 | AZ | CIDR | 예시 이름 |
 |------|----|---------|-----------|
-| Public | a | 10.30.10.1.0/24 | finalproj-prd-aws-apne2a-net-subnet-pub-01 |
-| Public | c | 10.30.10.2.0/24 | finalproj-prd-aws-apne2c-net-subnet-pub-01 |
-| Management | a | 10.30.10.11.0/24 | finalproj-prd-aws-apne2a-mgmt-subnet-pri-01 |
-| Management | c | 10.30.10.12.0/24 | finalproj-prd-aws-apne2c-mgmt-subnet-pri-01 |
-| App | a | 10.30.10.21.0/24 | finalproj-prd-aws-apne2a-app-subnet-prv-01 |
-| App | c | 10.30.10.22.0/24 | finalproj-prd-aws-apne2c-app-subnet-prv-01 |
-| DB | a | 10.30.10.31.0/24 | finalproj-prd-aws-apne2a-db-subnet-prv-01 |
-| DB | c | 10.30.10.32.0/24 | finalproj-prd-aws-apne2c-db-subnet-prv-01 |
+| Public | a | 10.12.10.0/24 | finalproj-prd-aws-apne2a-net-subnet-pub-01 |
+| Public | c | 10.12.12.0/24 | finalproj-prd-aws-apne2c-net-subnet-pub-01 |
+| Management | a | 12.12.20.0/24 | finalproj-prd-aws-apne2a-mgmt-subnet-pri-01 |
+| Management | c | 12.12.22.0/24 | finalproj-prd-aws-apne2c-mgmt-subnet-pri-01 |
+| App | a | 10.12.30.0/24 | finalproj-prd-aws-apne2a-app-subnet-prv-01 |
+| App | c | 10.12.32.0/24 | finalproj-prd-aws-apne2c-app-subnet-prv-01 |
+| DB | a | 10.12.40.0/24 | finalproj-prd-aws-apne2a-db-subnet-prv-01 |
+| DB | c | 10.12.42.0/24 | finalproj-prd-aws-apne2c-db-subnet-prv-01 |
 
-### 4.2 GCP 예시 (10.30.20.0/20)
 
-| 용도 | Zone | CIDR |
-|------|--------|---------|
-| Public | asia-ne3a | 10.30.20.1.0/24 |
-| Management | asia-ne3a | 10.30.20.11.0/24 |
-| App | asia-ne3a | 10.30.20.21.0/24 |
-| DB | asia-ne3a | 10.30.20.31.0/24 |
+### 3.2 GCP 예시 (10.20.0.0/16) - 미정
+
+| 용도              | Zone      | CIDR          |
+| --------------- | --------- | ------------- |
+| Public          | asia-ne3a | 10.20.10.0/24 |
+| App             | asia-ne3a | 10.20.30.0/24 |
+| DB              | asia-ne3a | 10.20.40.0/24 |
+| (선택) Management | asia-ne3a | 10.20.20.0/24 |
+
 
 멀티존 확장 시 AWS 규칙과 동일 패턴 적용.
 
 ---
 
-## 5. 고정 IP 규칙
+## 4. 고정 IP 규칙 - (필요시)
 
 Subnet 내 예약 IP:
 
-- `.10` : Bastion / Jump
-- `.11` : VPN GW / On-prem Tunnel endpoint
 - `.100+` : 특수 목적 서버
 
 ---
 
-## 6. DR 매핑
-
-Primary(AWS apne2) ↔ DR(GCP asia-ne3) 매핑 기준:
-
-- AWS VPC: `10.30.10.0/20`
-- GCP VPC: `10.30.20.0/20`
-
-Public/App/DB subnet 구조 동일하게 유지.
-
----
-
-## 7. Terraform 변수 구조 예시
+## 5. Terraform 변수 구조 예시
 naming 은 naming-conventions.md를 참조한다.
 ```hcl
 variable "environment" {}
@@ -104,7 +90,7 @@ variable "private_db_subnet_cidrs" { type = list(string) }
 
 ---
 
-## 8. 예외 CIDR 기록
+## 6. 예외 CIDR 기록
 
 예외가 필요할 경우 문서 하단에 기록:
 

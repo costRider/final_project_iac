@@ -7,44 +7,44 @@
 
 ## 1. 공통 원칙
 
-리소스 작성 시 공통 태그를 부여하여 관리를 명확히 한다.
+리소스 작성 시 공통 태그를 부여하여 terraform에서 관리되고 있는 리소스라는 것을 명시한다.
 
-예) terraform 자동화 리소스 생성 시 아래와 같은 공통 태그를 default_tags 로 부여 (생성 시 변수형태로 삽입)
+예) terraform 자동화 리소스 생성 시 아래와 같은 공통 태그를 default_tags 로 부여 (각 환경에서 변수형태로 삽입)
   common_tags ={
     Project     = "petclinic" // 현재 프로젝트명
     Environment = "dev" // 배포된 환경
-    Owner       = "mklee" //작성자
-    ManagedBy  = "Terraform" //작성된 도구
+    Owner       = "mklee" // 작성자
+    ManagedBy  = "Terraform" // 작성된 도구
+    cost_center = "petclinic-dev" //비용 주체 
   }
   
 ### 1.1 문자 규칙
-- 소문자 알파벳 + 숫자 + 하이픈(`-`) 사용
-- 언더스코어(`_`), 공백, 대문자 금지
+- 소문자 알파벳 + 숫자 + camelcase(`_`) 사용
 - 이름은 짧고 의미를 명확히
 
 ### 1.2 네이밍 기본 패턴
 
 ```
-{project}-{env}-{cloud}-{region}{zone?}-{layer}-{component}-{seq}
+{project}-{cloud}-{env}-{region}{zone?}-{layer}-{component}-{seq}
 ```
 
 | 필드 | 설명 |
 |------|------|
 | project | 프로젝트 식별자 (finalproj, petclinic 등) |
-| env | dev / stg / prd |
 | cloud | aws / gcp |
+| env | dev / stg / prd |
 | region/zone | apne2, apne2a, asia-ne3, asia-ne3a |
 | layer | net, app, db, obs |
-| component | vpc, subnet-pub, subnet-prv, eks, gke, rds, csql 등 |
+| component |  vpc, subnet-pub, subnet-prv, eks, gke, rds, csql 등 |
 | seq | 01, 02 … |
 
 ### 예시
 
 ```
-finalproj-prd-aws-apne2-net-vpc-01
-finalproj-prd-aws-apne2a-net-subnet-pub-01
-finalproj-prd-gcp-asia-ne3-app-gke-cluster-01
-finalproj-prd-gcp-asia-ne3-db-csql-pg-01
+finalproj-aws-prd--apne2-net-vpc-01
+finalproj-aws-prd--apne2a-net-subnet-pub-01
+finalproj-gcp-prd-asia-ne3-app-gke-cluster-01
+finalproj-gcp-prd--asia-ne3-db-csql-pg-01
 ```
 
 ---
@@ -53,81 +53,81 @@ finalproj-prd-gcp-asia-ne3-db-csql-pg-01
 
 ### 2.1 VPC
 ```
-finalproj-prd-aws-apne2-net-vpc-01
+finalproj-aws-prd-apne2-net-vpc-01
 ```
 
 ### 2.2 Subnets
 ```
-finalproj-prd-aws-apne2a-net-subnet-pub-01
-finalproj-prd-aws-apne2a-mgmt-subnet-prv-01
-finalproj-prd-aws-apne2a-app-subnet-prv-01
-finalproj-prd-aws-apne2a-db-subnet-prv-01
+finalproj-aws-prd--apne2a-net-subnet-pub-01
+finalproj-aws-prd-apne2a-mgmt-subnet-prv-01
+finalproj-aws-prd-apne2a-app-subnet-prv-01
+finalproj-aws-prd-apne2a-db-subnet-prv-01
 ```
 
 ### 2.3 Security Group
 ```
-finalproj-prd-aws-apne2-net-sg-bastion-01
-finalproj-prd-aws-apne2-mgmt-sg-control-01
-finalproj-prd-aws-apne2-app-sg-web-01
-finalproj-prd-aws-apne2-db-sg-rds-01
+finalproj-aws-prd-apne2-net-sg-bastion-01
+finalproj-aws-prd-apne2-mgmt-sg-control-01
+finalproj-aws-prd-apne2-app-sg-web-01
+finalproj-aws-prd-apne2-db-sg-rds-01
 ```
 
 ### 2.4 Load Balancer
 ```
-finalproj-prd-aws-apne2-app-lb-alb-01
-finalproj-prd-aws-apne2-app-lb-nlb-01
+finalproj-aws-prd-apne2-app-lb-alb-01
+finalproj-aws-prd-apne2-app-lb-nlb-01
 ```
 
 ### 2.5 EKS
 ```
-finalproj-prd-aws-apne2-app-eks-cluster-01
-finalproj-prd-aws-apne2-app-eks-ng-app-01
-finalproj-prd-aws-apne2-obs-eks-ng-obs-01
-finalproj-prd-aws-apne2-obs-eks-ng-other-01
+finalproj-aws-prd-apne2-app-eks-cluster-01
+finalproj-aws-prd-apne2-app-eks-ng-app-01
+finalproj-aws-prd-apne2-obs-eks-ng-obs-01
+finalproj-aws-prd-apne2-obs-eks-ng-other-01
 ```
 
 ### 2.6 RDS
 ```
-finalproj-prd-aws-apne2-db-rds-pg-01
-finalproj-prd-aws-apne2-db-rds-mysql-01
-finalproj-prd-aws-apne2-db-aurora-mysql-01
+finalproj-aws-prd-apne2-db-rds-pg-01
+finalproj-aws-prd-apne2-db-rds-mysql-01
+finalproj-aws-prd-apne2-db-aurora-mysql-01
 ```
 
 ---
 
-## 3. GCP 네이밍 규칙
+## 3. GCP 네이밍 규칙 - 미정
 
 ### 3.1 Project ID
 ```
-finalproj-prd-gcp-main
-finalproj-dev-gcp-lab
+finalproj-gcp-prd-main
+finalproj-gcp-prd-lab
 ```
 
 ### 3.2 VPC/Subnet
 ```
-finalproj-prd-gcp-asia-ne3-net-vpc-01
-finalproj-prd-gcp-asia-ne3a-net-subnet-pub-01
-finalproj-prd-gcp-asia-ne3a-mgmt-subnet-prv-01
-finalproj-prd-gcp-asia-ne3a-app-subnet-prv-01
-finalproj-prd-gcp-asia-ne3a-db-subnet-prv-01
+finalproj-gcp-prd-asia-ne3-net-vpc-01
+finalproj-gcp-prd-asia-ne3a-net-subnet-pub-01
+finalproj-gcp-prd-asia-ne3a-mgmt-subnet-prv-01
+finalproj-gcp-prd-asia-ne3a-app-subnet-prv-01
+finalproj-gcp-prd-asia-ne3a-db-subnet-prv-01
 ```
 
 ### 3.3 GKE
 ```
-finalproj-prd-gcp-asia-ne3-app-gke-cluster-01
-finalproj-prd-gcp-asia-ne3-obs-gke-np-obs-01
+finalproj-gcp-prd-asia-ne3-app-gke-cluster-01
+finalproj-gcp-prd-asia-ne3-obs-gke-np-obs-01
 ```
 
 ### 3.4 Cloud SQL
 ```
-finalproj-prd-gcp-asia-ne3-db-csql-pg-01
-finalproj-prd-gcp-asia-ne3-db-csql-mysql-01
+finalproj-gcp-prd-asia-ne3-db-csql-pg-01
+finalproj-gcp-prd-asia-ne3-db-csql-mysql-01
 ```
 
 ### 3.5 Firewall
 ```
-finalproj-prd-gcp-asia-ne3-net-fw-allow-web-01
-finalproj-prd-gcp-asia-ne3-db-fw-allow-db-01
+finalproj-gcp-prd-asia-ne3-net-fw-allow-web-01
+finalproj-gcp-prd-asia-ne3-db-fw-allow-db-01
 ```
 
 ---

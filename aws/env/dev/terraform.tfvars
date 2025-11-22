@@ -8,7 +8,7 @@ region_code  = "apne2"
 cluster_name    = "k8s-eks"
 cluster_version = "1.30"
 
-vpc_cidr = "10.10.10.0/20"
+vpc_cidr = "10.10.0.0/16"
 
 public_subnet_cidrs       = ["10.10.10.0/24", "10.10.11.0/24"]
 private_mgmt_subnet_cidrs = ["10.10.12.0/24", "10.10.13.0/24"]
@@ -36,4 +36,4 @@ node_min_size      = 1
 node_max_size      = 4
 
 owner       = "mklee"
-cost_center = "petclinic-lab"
+cost_center = "petclinic-dev"

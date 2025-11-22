@@ -10,6 +10,6 @@ locals {
     Owner       = var.owner
 
     ManagedBy  = "Terraform"
-    CostCenter = var.cost_center
+    cost_center = var.cost_center
   }
 }

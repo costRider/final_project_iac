@@ -26,7 +26,7 @@ variable "cluster_name" {
 variable "vpc_cidr" {
   description = "VPC CIDR대역(추후 서브넷 쪼개기 기준)"
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 variable "public_subnet_cidrs" {
@@ -151,6 +151,6 @@ variable "owner" {
 }
 
 variable "cost_center" {
-  description = "비용 / 태그용 값"
-  type        = string
+  description = "비용 주체"
+  type = string
 }
