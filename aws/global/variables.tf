@@ -1,9 +1,30 @@
-#####
+###############################################
+# Terraform Module: aws/env/global/
 #
-# main 변수 정의
+# File: variables.tf 
 #
-####
-# main.tf는 구조에 집중 terraform.tfvars는 환경별 값에 집중
+# 설명:
+#   - 목적: AWS 환경 공통 기준
+#   - 구성요소: 변수
+#
+# 관리 정보:
+#   - 최초 작성일: 2025-11-22
+#   - 최근 수정일: 2025-11-22
+#   - 작성자: LMK
+#   - 마지막 수정자: LMK
+#
+# 버전 정보:
+#   - Terraform: >= 1.5.0
+#   - Provider: AWS ~> 6.0
+#
+# 변경 이력:
+#   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
+#
+# 주의 사항:
+#   - 이 모듈은 <AWS> 전용입니다.
+#   - 변수 값은 env 디렉토리 내 tfvars에서 관리합니다.
+#   - providers/backend는 env(dev,stg,prd) 단위에서 적용됩니다.
+###############################################
 
 variable "aws_region" {
   description = "리소스를 생성할 AWS 리전(예: ap-northeast-2)"
@@ -32,25 +53,21 @@ variable "vpc_cidr" {
 variable "public_subnet_cidrs" {
   description = "퍼블릭 서브넷 CIDR 목록(각 AZ용)"
   type        = list(string)
-  default     = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "mgmt_subnet_cidrs" {
   description = "mgmt 서브넷 CIDR 목록(각 AZ용)"
   type        = list(string)
-  default     = ["10.0.11.0/24", "10.0.12.0/24"]
 }
 
 variable "worker_subnet_cidrs" {
   description = "worker 서브넷- CIDR 목록(각 AZ용)"
   type        = list(string)
-  default     = ["10.0.21.0/24", "10.0.22.0/24"]
 }
 
 variable "db_subnet_cidrs" {
   description = "db 서브넷 CIDR 목록(각 AZ용)"
   type        = list(string)
-  default     = ["10.0.31.0/24", "10.0.32.0/24"]
 }
 
 variable "azs" {

@@ -1,12 +1,30 @@
-######################################
-#   2025-11-16 - LMK
-#   작성 내용
-#   EKS Cluster IAM Role + 정책
-#   EKS Node IAM Role + 정책
-#   EKS Cluster Security Group
-#   EKS Cluster
-#   EKS NodeGroup(Managed)
-######################################
+###############################################
+# Terraform Module: aws/env/modules/eks/
+#
+# File: main.tf 
+#
+# 설명:
+#   - 목적: AWS 환경 EKS 모듈
+#   - 구성요소: EKS iam role + 정책, cluster, node, cluster security group
+#
+# 관리 정보:
+#   - 최초 작성일: 2025-11-22
+#   - 최근 수정일: 2025-11-22
+#   - 작성자: LMK
+#   - 마지막 수정자: LMK
+#
+# 버전 정보:
+#   - Terraform: >= 1.5.0
+#   - Provider: AWS ~> 6.0
+#
+# 변경 이력:
+#   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
+#
+# 주의 사항:
+#   - 이 모듈은 <AWS> 전용입니다.
+#   - 변수 값은 env 디렉토리 내 tfvars에서 관리합니다.
+#   - providers/backend는 env(dev,stg,prd) 단위에서 적용됩니다.
+###############################################
 
 ####################################
 #   1. EKS Cluster IAM Role
@@ -94,7 +112,10 @@ resource "aws_security_group" "eks_cluster" {
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    security_groups = [var.node_sg_id]
+    security_groups = compact([
+        var.node_sg_id,
+        var.mgmt_sg_id
+      ])
   }
   egress {
     from_port = 0
@@ -108,6 +129,7 @@ resource "aws_security_group" "eks_cluster" {
   })
 
 }
+
 
 ####################################
 #   4. EKS Cluster (Control Plane)
@@ -131,6 +153,7 @@ resource "aws_eks_cluster" "this" {
   kubernetes_network_config {
     #cluster_ip CIDR - 기본 값 쓰려면 생략 가능, 명시하고 싶으면 설정
     #service_ipv4_cidr = "192.10.0.0/16"
+    service_ipv4_cidr = "192.168.0.0/16"
   }
 
   tags = var.common_tags

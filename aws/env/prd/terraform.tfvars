@@ -6,15 +6,17 @@ aws_region   = "ap-northeast-2"
 region_code  = "apne2"
 
 cluster_name    = "k8s-eks"
-cluster_version = "1.30"
+cluster_version = "1.33"
 
-vpc_cidr = "10.30.10.0/20"
+vpc_cidr = "10.10.0.0/16"
 
-public_subnet_cidrs       = ["10.30.10.0/24", "10.30.11.0/24"]
-private_mgmt_subnet_cidrs = ["10.30.12.0/24", "10.30.13.0/24"]
-private_app_subnet_cidrs  = ["10.30.14.0/24", "10.30.15.0/24"]
-private_db_subnet_cidrs   = ["10.30.16.0/24", "10.30.17.0/24"]
+# CIDR Schema에 맞추어 작성 10.{AWS/prd}.{sub/zone}.0/24
+public_subnet_cidrs       = ["10.12.10.0/24", "10.12.12.0/24"]
+private_mgmt_subnet_cidrs = ["10.12.20.0/24", "10.12.22.0/24"]
+private_app_subnet_cidrs  = ["10.12.30.0/24", "10.12.32.0/24"]
+private_db_subnet_cidrs   = ["10.12.40.0/24", "10.12.42.0/24"]
 
+# CIDR 구성에 맞추어 a,c 로 구성(0,2)
 azs = ["ap-northeast-2a", "ap-northeast-2c"]
 
 my_ip_cidr = "180.70.43.251/32"
