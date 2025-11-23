@@ -31,21 +31,30 @@
 # RDS 생성
 #############################
 
+resource "aws_db_subnet_group" "petclinic" {
+  name       = "${var.project_name}-${var.environment}-db-subnet-group"
+  subnet_ids = var.db_subnet_ids
+
+  tags = merge(var.common_tags, {
+    Name = "${var.project_name}-${var.environment}-db-subnet-group"
+  })
+}
+
 #인스턴스 생성
 resource "aws_db_instance" "petclinic" {
-  identifier              = "petclinic-postgres"
+  identifier            = "${var.project_name}-${var.environment}-postgres"
   allocated_storage       = 20
   max_allocated_storage   = 100
   engine                  = "postgres"
-  engine_version          = "16.3"          # 필요시 조정
+  # engine_version          = "16.3"          # 필요시 조정
   instance_class          = "db.t3.micro"   # 실습이면 이 정도
   db_name                 = "petclinic"
   username                = var.db_username
   password                = var.db_password
   port                    = 5432
 
-  db_subnet_group_name    = var.db_subnet_ids[0].name
-  vpc_security_group_ids  = [aws_security_group.petclinic_db_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.petclinic.name
+  vpc_security_group_ids  = [var.db_sg_id]
 
   multi_az                = false           # 필요시 true
   publicly_accessible     = false
@@ -55,8 +64,8 @@ resource "aws_db_instance" "petclinic" {
 
   deletion_protection     = false
 
-  tags = merge(var.common_tags, { #codex로 개선
-    Name = "${local.name_prefix}-db-pri-01"
+   tags = merge(var.common_tags, {
+    Name = "${var.project_name}-${var.environment}-rds"
   })
 }
 

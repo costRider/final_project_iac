@@ -32,7 +32,8 @@
 module "iam" {
   source = "../../modules/iam"
 
-  project_name         = var.project_name
+  project_name = var.project_name
+  environment = var.environment
 }
 
 module "instance" {
@@ -109,6 +110,8 @@ module "eks" {
   petclinic_sa           = var.petclinic_sa
   petclinic_pod_role_arn = module.iam.petclinic_pod_role_arn
 
+  lbc_role_arn  = module.iam.lbc_role_arn
+
   depends_on = [module.iam]
 }
 
@@ -128,6 +131,7 @@ module "db" {
   db_password   = var.db_password
 }
 
+/*
 module "petclinic" {
   source = "../../modules/petclinic"
 
@@ -137,6 +141,9 @@ module "petclinic" {
   pod_role_arn          = module.iam.petclinic_pod_role_arn
   petclinic_ns          = var.petclinic_ns
   petclinic_sa          = var.petclinic_sa
+  cluster_name          = var.cluster_name
+
+  depends_on = [module.eks] # 중요
 }
 
-
+*/

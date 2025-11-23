@@ -355,3 +355,16 @@ resource "aws_eks_addon" "pod_identity_agent" {
     Name = "${var.cluster_name}-addon-pod_identity"
   })
 }
+
+resource "aws_eks_pod_identity_association" "lbc" {
+  cluster_name    = aws_eks_cluster.this.name
+  namespace       = "kube-system"
+  service_account = "aws-load-balancer-controller"
+  role_arn        = var.lbc_role_arn
+
+  depends_on = [
+    aws_eks_addon.pod_identity_agent,
+    aws_eks_cluster.this
+  ]
+}
+

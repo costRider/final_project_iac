@@ -46,3 +46,7 @@ output "mgmt_profile_name" {
 output "petclinic_pod_role_arn" {
   value = aws_iam_role.petclinic_pod_role.arn
 }
+
+output "lbc_role_arn" {
+  value = aws_iam_role.lbc.arn
+}

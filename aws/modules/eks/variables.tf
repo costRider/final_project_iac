@@ -150,3 +150,12 @@ variable "petclinic_pod_role_arn" {
   description = "Petclinic Pod Role ARN"
   type = string
 }
+
+variable "lbc_role_arn" {}
+
+variable "lbc_sa_name" {
+  default = "aws-load-balancer-controller"
+}
+variable "lbc_namespace" {
+  default = "kube-system"
+}

@@ -31,6 +31,11 @@ variable "petclinic_db_endpoint"{
     type = string
 }
 
+variable "cluster_name" {
+  description = "Cluter_name"
+  type = string
+}
+
 variable "db_username"{
     description = "db username"
     type = string
@@ -38,11 +43,6 @@ variable "db_username"{
 
 variable "db_password"{
     description = "db password"
-    type = string
-}
-
-variable "pod_role_arn"{
-    description = "pod_role_arn"
     type = string
 }
 
@@ -55,3 +55,5 @@ variable "petclinic_sa" {
   description = "Petclinic ServiceAccount"
   type = string
 }
+
+variable "aws_region" { type = string }

@@ -55,13 +55,7 @@ variable "node_max_size" { type = number }
 variable "node_disk_size" { type = number }
 variable "owner" { type = string }
 variable "cost_center" { type = string }
-variable "db_password" {
-  type    = string
-  default = "admin"
-}
-variable "db_username" {
-  type    = string
-  default = "poweradmin!"
-}
+variable "db_password" { type = string }
+variable "db_username" { type = string }
 variable "petclinic_sa" { type = string }
 variable "petclinic_ns" { type = string }
