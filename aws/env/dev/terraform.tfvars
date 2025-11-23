@@ -67,3 +67,8 @@ node_max_size      = 4
 
 owner       = "mklee"
 cost_center = "petclinic-dev"
+
+db_username  = "admin"
+db_password  = "poweradmin!"
+petclinic_ns = "petclinic-ns"
+petclinic_sa = "petclinic-sa"

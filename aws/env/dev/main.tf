@@ -11,7 +11,7 @@
 #
 # 관리 정보:
 #   - 최초 작성일: 2025-11-22
-#   - 최근 수정일: 2025-11-22
+#   - 최근 수정일: 2025-11-23
 #   - 작성자: LMK
 #   - 마지막 수정자: LMK
 #
@@ -21,6 +21,7 @@
 #
 # 변경 이력:
 #   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
+#   - 2025-11-23 / DB 및 Petclinic 업데이트 / 작성자: LMK 
 #
 # 주의 사항:
 #   - 이 모듈은 <AWS> 전용입니다.
@@ -31,7 +32,7 @@
 module "iam" {
   source = "../../modules/iam"
 
-  project_name = var.project_name
+  project_name         = var.project_name
 }
 
 module "instance" {
@@ -103,4 +104,39 @@ module "eks" {
   mgmt_role_arn      = module.iam.mgmt_role_arn
 
   common_tags = local.common_tags
+
+  petclinic_ns           = var.petclinic_ns
+  petclinic_sa           = var.petclinic_sa
+  petclinic_pod_role_arn = module.iam.petclinic_pod_role_arn
+
+  depends_on = [module.iam]
 }
+
+module "db" {
+  source = "../../modules/rds"
+
+  project_name  = var.project_name
+  environment   = var.environment
+  aws_region    = var.aws_region
+  region_code   = var.region_code
+  azs           = var.azs
+  common_tags   = local.common_tags
+  vpc_id        = module.network.vpc_id
+  db_subnet_ids = module.network.db_subnet_ids
+  db_sg_id      = module.network.db_sg_id
+  db_username   = var.db_username
+  db_password   = var.db_password
+}
+
+module "petclinic" {
+  source = "../../modules/petclinic"
+
+  petclinic_db_endpoint = module.db.petclinic_db_endpoint
+  db_username           = var.db_username
+  db_password           = var.db_password
+  pod_role_arn          = module.iam.petclinic_pod_role_arn
+  petclinic_ns          = var.petclinic_ns
+  petclinic_sa          = var.petclinic_sa
+}
+
+

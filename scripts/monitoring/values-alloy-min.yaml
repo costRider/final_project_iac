@@ -1,0 +1,88 @@
+controller:
+  type: daemonset
+
+rbac:
+  create: true
+
+alloy:
+  resources:
+    requests: { cpu: 50m, memory: 128Mi }
+    limits:   { memory: 256Mi }
+
+  nodeSelector: {}        # 모든 노드에 깔 거면 비워두기
+  tolerations:            # taint가 있다면 최소 Exists 하나
+    - operator: Exists
+
+  configMap:
+    create: true
+    content: |
+      discovery.kubernetes "pods" {
+        role = "pod"
+        namespaces {
+          names = ["petclinic-ns", "edge-proxy", "monitoring"]
+        }
+      }
+
+      discovery.relabel "k8s_logs" {
+        targets = discovery.kubernetes.pods.targets
+
+        // add normalized labels
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          target_label  = "app"
+        }
+        // fallback app label if above is missing
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app"]
+          target_label  = "app"
+        }
+      }
+
+      loki.source.kubernetes "k8s" {
+        targets    = discovery.relabel.k8s_logs.output
+        forward_to = [loki.process.k8s.receiver]
+      }
+
+      loki.process "k8s" {
+        stage.cri {}
+
+        // correlation labels
+        stage.labels {
+          values = {
+            cluster = "k8s-eks",
+          }
+        }
+
+        // drop noisy labels (optional)
+        stage.label_drop {
+          values = ["filename", "stream", "pod_uid", "container_id"]
+        }
+
+        forward_to = [loki.write.to_loki.receiver]
+      }
+
+      loki.write "to_loki" {
+        endpoint {
+          url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
+        }
+        external_labels = {
+          cluster = "k8s-eks",
+        }
+      }
+
+
+service:
+  enabled: false
+

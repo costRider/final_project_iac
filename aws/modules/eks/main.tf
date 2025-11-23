@@ -328,3 +328,30 @@ resource "aws_eks_access_policy_association" "mgmt_admin" {
 }
 
 
+# pod identity에 정책 매핑한 role 연결(Role과 ServiceAccount 연결)
+resource "aws_eks_pod_identity_association" "petclinic_pod_identity" {
+  cluster_name    = var.cluster_name
+  namespace       = var.petclinic_ns
+  service_account = var.petclinic_sa
+  role_arn        = var.petclinic_pod_role_arn
+
+  depends_on = [
+    aws_eks_cluster.this,
+    aws_eks_addon.pod_identity_agent,
+  ]
+}
+
+resource "aws_eks_addon" "pod_identity_agent" {
+  cluster_name = aws_eks_cluster.this.name
+  addon_name   = "eks-pod-identity-agent"
+
+  # 버전은 생략하면 자동 최신, 아니면 명시
+  # addon_version    = "v1.0.0-eksbuild.1"
+  resolve_conflicts_on_create = "OVERWRITE"
+
+  depends_on    = [aws_eks_cluster.this]
+
+  tags = merge(var.common_tags,{
+    Name = "${var.cluster_name}-addon-pod_identity"
+  })
+}

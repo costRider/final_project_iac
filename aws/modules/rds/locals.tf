@@ -1,13 +1,14 @@
-# This file defines variable inputs for customizing the IAM module resources.
+# This file declares calculated local values used across the network module.
+
 
 ###############################################
-# Terraform Module: aws/env/modules/iam
+# Terraform Module: aws/env/dev/network
 #
-# File: variables.tf 
+# File: locals.tf 
 #
 # 설명:
-#   - 목적: 개발환경 IAM에서 사용할 변수들
-#   - 구성요소: 변수 설정
+#   - 목적: 개발환경 네트워크 local
+#   - 구성요소: 공통 네이밍 prefix
 #
 # 관리 정보:
 #   - 최초 작성일: 2025-11-22
@@ -28,7 +29,13 @@
 #   - providers/backend는 env(dev,stg,prd) 단위에서 적용됩니다.
 ###############################################
 
-variable "project_name" {
-    description = "Project Name"
-    type = string
+locals {
+  region_code = coalesce(
+    var.region_code,
+     replace(var.aws_region, "-", "")
+  )
+
+  name_prefix = "${var.project_name}-aws-${var.environment}-${local.region_code}"
+
+  az_code_map = { for az in var.azs : az => replace(az, var.aws_region, local.region_code) }
 }

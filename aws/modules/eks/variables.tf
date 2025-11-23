@@ -135,3 +135,18 @@ variable "common_tags" {
   description = "공통 태그(root에서 내려주는 태그)"
   type = map(string)
 }
+
+variable "petclinic_ns" {
+  description = "Petclinic 네임스페이스"
+  type = string
+}
+
+variable "petclinic_sa" {
+  description = "Petclinic ServiceAccount"
+  type = string
+}
+
+variable "petclinic_pod_role_arn" {
+  description = "Petclinic Pod Role ARN"
+  type = string
+}

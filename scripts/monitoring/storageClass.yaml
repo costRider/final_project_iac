@@ -1,0 +1,42 @@
+# gp3 (기본 SC)
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  type: gp3
+  encrypted: "true"
+---
+# efs-rwx StorageClass (grafana용)
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-rwx-grafana
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-041d3780bc8ef8822
+  directoryPerms: "0775"
+  uid: "472"   # ← 추가
+  gid: "472"   # ← 추가
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+# loki 용
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata: { name: efs-rwx-loki }
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-041d3780bc8ef8822
+  directoryPerms: "0775"
+  uid: "10001"
+  gid: "10001"
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+

@@ -19,7 +19,7 @@
 #   - Provider: AWS ~> 6.0
 #
 # 변경 이력:
-#   - 2025-11-23 / network 하위에서 구조 분리 / 작성자: LMK 
+#   - 2025-11-23 / rds 생성용 작성 / 작성자: LMK 
 #
 # 주의 사항:
 #   - 이 모듈은 <AWS> 전용입니다.
@@ -27,33 +27,39 @@
 #   - providers/backend는 env(dev,stg,prd) 단위에서 적용됩니다.
 ###############################################
 
-
 #############################
 # RDS 생성
 #############################
-/*
 
 #인스턴스 생성
 resource "aws_db_instance" "petclinic" {
-  identifier        = "petclinic-db"
-  engine            = "mysql"
-  engine_version    = "8.0"
-  instance_class    = "db.t3.micro"
-  allocated_storage = 20
+  identifier              = "petclinic-postgres"
+  allocated_storage       = 20
+  max_allocated_storage   = 100
+  engine                  = "postgres"
+  engine_version          = "16.3"          # 필요시 조정
+  instance_class          = "db.t3.micro"   # 실습이면 이 정도
+  db_name                 = "petclinic"
+  username                = var.db_username
+  password                = var.db_password
+  port                    = 5432
 
-  db_subnet_group_name   = aws_db_subnet_group.petclinic.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
+  db_subnet_group_name    = var.db_subnet_ids[0].name
+  vpc_security_group_ids  = [aws_security_group.petclinic_db_sg.id]
 
-  db_name  = "petclinic"
-  username = var.db_user
-  password = var.db_pass
-  port     = 3306
+  multi_az                = false           # 필요시 true
+  publicly_accessible     = false
+  skip_final_snapshot     = true
 
-  skip_final_snapshot = true
+  backup_retention_period = 1
 
-  publicly_accessible = false
+  deletion_protection     = false
+
+  tags = merge(var.common_tags, { #codex로 개선
+    Name = "${local.name_prefix}-db-pri-01"
+  })
 }
-*/
+
 #############################
 # RDS 생성 종료
 #############################

@@ -43,3 +43,6 @@ output "mgmt_profile_name" {
   value = aws_iam_instance_profile.mgmt.name
 }
 
+output "petclinic_pod_role_arn" {
+  value = aws_iam_role.petclinic_pod_role.arn
+}

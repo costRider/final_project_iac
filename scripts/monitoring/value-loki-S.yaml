@@ -1,0 +1,215 @@
+# ========================================
+# Loki 최소 구성 (데이터 영속성만 보장)
+# ========================================
+
+# SimpleScalable 모드 (단일 파드 3개로 구성)
+deploymentMode: SimpleScalable
+
+# 분산 모드 컴포넌트 비활성화
+distributor:
+  replicas: 0
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+indexGateway:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+ruler:
+  enabled: false
+
+# 캐시 비활성화 (최소 구성)
+chunksCache:
+  enabled: false
+resultsCache:
+  enabled: false
+
+# ========================================
+# Loki 엔진 설정
+# ========================================
+loki:
+  auth_enabled: false
+  
+# ring 통신용 memberlist 활성 + 조인 주소 고정
+  memberlist:
+    join_members:
+      - loki-memberlist.monitoring.svc.cluster.local
+
+
+  commonConfig:
+    replication_factor: 1
+  
+  # S3 스토리지 (영속성 핵심)
+  storage:
+    type: s3
+    bucketNames:
+      chunks: k8s-bucket-mk
+      ruler: k8s-bucket-mk
+      admin: k8s-bucket-mk
+  
+  # TSDB 스키마
+  schemaConfig:
+    configs:
+      - from: "2024-01-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  
+  # S3 연결 (endpoint 명시 필수)
+  storage_config:
+    aws:
+      s3: s3://k8s-bucket-mk
+      region: ap-northeast-2
+      endpoint: s3.ap-northeast-2.amazonaws.com
+      s3forcepathstyle: false
+    
+ #   tsdb_shipper:
+  #    active_index_directory: /var/loki/tsdb-index
+   #   cache_location: /var/loki/tsdb-cache
+    #  shared_store: s3
+  
+  # Compactor (데이터 정리)
+  compactor:
+    working_directory: /var/loki/compactor
+    retention_enabled: true
+    delete_request_store: s3
+  
+  # 보존 기간
+  limits_config:
+    retention_period: 168h  # 7일
+    reject_old_samples: true
+    reject_old_samples_max_age: 4h   # 상황 보며 1~4h 정도로
+
+# ========================================
+# Backend (Ingester + Compactor + QueryBackend)
+# ========================================
+backend:
+  replicas: 1  # 단일 복제본
+  
+  nodeSelector:
+    role: obs
+  tolerations:
+    - key: role
+      operator: Equal
+      value: obs
+      effect: NoSchedule
+  # EFS 영속성 (Pod 재시작 시 WAL 보존)
+  persistence:
+    enabled: true
+    storageClass: efs-rwx-loki
+    accessModes:
+      - ReadWriteMany
+    size: 50Gi
+  
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+# ========================================
+# Read (Query Frontend + Querier)
+# ========================================
+read:
+  replicas: 1
+
+  nodeSelector:
+    role: obs
+  tolerations:
+    - key: role
+      operator: Equal
+      value: obs
+      effect: NoSchedule
+  
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+# ========================================
+# Write (Distributor)
+# ========================================
+write:
+  replicas: 1
+
+  nodeSelector:
+    role: obs
+  tolerations:
+    - key: role
+      operator: Equal
+      value: obs
+      effect: NoSchedule
+
+  # EFS 영속성 (WAL 보존)
+  persistence:
+    enabled: true
+    storageClass: efs-rwx-loki
+    accessModes:
+      - ReadWriteMany
+    size: 20Gi
+  
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+# ========================================
+# Gateway (선택사항, 단일 엔드포인트)
+# ========================================
+gateway:
+  replicas: 1
+  
+  nodeSelector:
+    role: obs
+  tolerations:
+    - key: role
+      operator: Equal
+      value: obs
+      effect: NoSchedule
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# ========================================
+# ServiceAccount (IRSA/Pod Identity)
+# ========================================
+serviceAccount:
+  create: true
+  name: loki
+  annotations:
+    # IRSA 사용 시 주석 해제:
+    # eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/LokiS3Role
+
+# ========================================
+# 모니터링 비활성화 (최소 구성)
+# ========================================
+monitoring:
+  serviceMonitor:
+    enabled: false
+  selfMonitoring:
+    enabled: false
+
+lokiCanary:
+  enabled: false
+
+test:
+  enabled: false
