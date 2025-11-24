@@ -84,9 +84,9 @@ variable "azs" {
   type        = list(string)
 }
 
-variable "my_ip_cidr" {
+variable "my_ip_cidrs" {
   description = "SSH 허용용 개인 IP CIDR"
-  type        = string
+  type        = list(string)
 }
 
 variable "common_tags" {
