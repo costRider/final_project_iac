@@ -30,7 +30,15 @@
 # 1) Namespace + SA (이미 .yaml로 있으면 그대로)
 resource "kubernetes_manifest" "petclinic_ns" {
   manifest = yamldecode(
-    templatefile("${path.module}/petclinic-nsa.yaml.tftpl", {
+    templatefile("${path.module}/petclinic-ns.yaml.tftpl", {
+      petclinic_ns = local.petclinic_ns
+    })
+  )
+}
+
+resource "kubernetes_manifest" "petclinic_sa" {
+  manifest = yamldecode(
+    templatefile("${path.module}/petclinic-sa.yaml.tftpl", {
       petclinic_ns = local.petclinic_ns
       petclinic_sa = local.petclinic_sa
     })
