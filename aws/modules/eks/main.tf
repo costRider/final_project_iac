@@ -211,9 +211,9 @@ resource "aws_eks_node_group" "app" {
   })
 
   depends_on = [ aws_eks_cluster.this,
-  aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
-  aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
-  aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
+    aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
   ]
 }
 
@@ -259,9 +259,9 @@ resource "aws_eks_node_group" "obs" {
   })
 
   depends_on = [ aws_eks_cluster.this,
-  aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
-  aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
-  aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
+    aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
   ]
 }
 
@@ -296,9 +296,9 @@ resource "aws_eks_node_group" "default" {
   })
 
   depends_on = [ aws_eks_cluster.this,
-  aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
-  aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
-  aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
+    aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy 
   ]
 }
 
