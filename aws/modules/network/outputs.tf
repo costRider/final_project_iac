@@ -63,16 +63,6 @@ output "mgmt_sg_id" {
   value       = aws_security_group.mgmt.id
 }
 
-output "node_sg_id" {
-  description = "Node Security Group ID"
-  value       = aws_security_group.node.id
-}
-
-output "db_sg_id"{
-  description = "DB Security Group ID"
-  value = aws_security_group.db.id
-}
-
 output "public_route_table_id" {
   description = "퍼블릭 라우트 테이블 ID"
   value       = aws_route_table.public.id
