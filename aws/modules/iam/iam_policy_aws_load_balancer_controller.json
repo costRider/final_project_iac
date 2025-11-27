@@ -8,6 +8,8 @@
         "elasticloadbalancing:DescribeLoadBalancers",
         "elasticloadbalancing:DescribeLoadBalancerAttributes",
         "elasticloadbalancing:DescribeListeners",
+        "elasticloadbalancing:DescribeListenerAttributes",
+        "elasticloadbalancing:DescribeListenerAttribute",
         "elasticloadbalancing:DescribeListenerCertificates",
         "elasticloadbalancing:DescribeSSLPolicies",
         "elasticloadbalancing:DescribeRules",

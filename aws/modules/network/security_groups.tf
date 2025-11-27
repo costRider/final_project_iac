@@ -48,33 +48,11 @@ resource "aws_security_group" "mgmt" {
   })
 }
 
-resource "aws_security_group" "node" {
-  name        = "${local.name_prefix}-app-sg-node-01"
-  description = "Private node security group"
-  vpc_id      = aws_vpc.this.id
-
-  tags = merge(var.common_tags, {
-    Name = "${local.name_prefix}-app-sg-node-01"
-  })
-}
-
-resource "aws_security_group" "db" {
-  name        = "${local.name_prefix}-db-sg-db-01"
-  description = "DB security group"
-  vpc_id      = aws_vpc.this.id
-
-  tags = merge(var.common_tags, {
-    Name = "${local.name_prefix}-db-sg-db-01"
-  })
-}
-
 #############################################
 # 2022-11-22  - LMK 작성
 # 보안그룹 룰 적용
 # 1. bastion - Source:MyIP/INBOUND(22), OUTBOUND(ALL)
 # 2. mgmt - Source:Bastion/INBOUND(22), OUTBOUND(ALL)
-# 3. EKS node - Source:VPC/INBOUND(ALL), OUTBOUND(ALL)
-# 4. DB - Source:EKS node/INBOUND(5432), OUTBOUND(ALL)
 #############################################
 
 resource "aws_security_group_rule" "bastion_ingress_ssh" {
@@ -115,40 +93,3 @@ resource "aws_security_group_rule" "mgmt_egress_all" {
   security_group_id = aws_security_group.mgmt.id
 }
 
-resource "aws_security_group_rule" "node_ingress_all_from_vpc" {
-  type              = "ingress"
-  description       = "Allow all inbound traffic from VPC"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.node.id
-}
-
-resource "aws_security_group_rule" "node_egress_all" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.node.id
-}
-
-resource "aws_security_group_rule" "db_ingress_from_Node" {
-  type              = "ingress"
-  description       = "Allow db inbound traffic from node"
-  from_port         = 5432
-  to_port           = 5432
-  protocol          = "tcp"
-  source_security_group_id = aws_security_group.node.id
-  security_group_id = aws_security_group.db.id
-}
-
-resource "aws_security_group_rule" "db_egress_all" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.db.id
-}

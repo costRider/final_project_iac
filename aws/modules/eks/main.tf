@@ -20,43 +20,13 @@
 # 변경 이력:
 #   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
 #   - 2025-11-23 / EC2 MGMT 접근 권한 업데이트 / 작성자: LMK
-#   - 2025-11-27 / 런치 템플릿 추가 App Node(Petclinic) 보안그룹 -DB체인 설정용 / 작성자: LMK
+#   - 2025-11-27 / 런치 템플릿 추가 App Node(Petclinic) 보안그룹 -DB체인 설정용 - 최종삭제 / 작성자: LMK
 #
 # 주의 사항:
 #   - 이 모듈은 <AWS> 전용입니다.
 #   - 변수 값은 env 디렉토리 내 tfvars에서 관리합니다.
 #   - providers/backend는 env(dev,stg,prd) 단위에서 적용됩니다.
 ###############################################
-
-resource "aws_launch_template" "app" {
-  name_prefix = "${var.cluster_name}-app-"
-
-  # 여기가 핵심: NodeGroup에 붙일 SG
-  vpc_security_group_ids = [
-    var.node_sg_id   
-  ]
-
-    block_device_mappings {
-    device_name = "/dev/xvda"  # AL2/AL2023 기본 루트 디바이스
-
-    ebs {
-      volume_size           = var.node_disk_size   # 예: 50
-      volume_type           = "gp3"
-      delete_on_termination = true
-      encrypted             = true
-    }
-  }
-  # 필요하다면 user data (선택)
-  # user_data = base64encode(file("userdata.sh"))
-
-  tag_specifications {
-    resource_type = "instance"
-    tags = merge(var.common_tags, {
-      "Name" = "${var.cluster_name}-app-node"
-    })
-  }
-}
-
 
 ####################################
 #   1. EKS Cluster IAM Role
@@ -138,14 +108,12 @@ resource "aws_security_group" "eks_cluster" {
   vpc_id = var.vpc_id
 
   #기본 VPC 전체에서 443으로 접근 허용
-  # 더 조이고 싶으면 node_sg에서만 허용하도록 변경할 수 있음
   ingress {
     description = "Allow HTTPS from worker nodes SG"
     from_port = 443
     to_port = 443
     protocol = "tcp"
     security_groups = compact([
-        var.node_sg_id,
         var.mgmt_sg_id
       ])
   }
@@ -225,11 +193,6 @@ resource "aws_eks_node_group" "app" {
   disk_size = var.node_disk_size
 
   //labels = var.node_lables3
-
-    launch_template {
-    id      = aws_launch_template.app.id
-    version = "$Latest"
-  }
 
   labels = {
     role = "app"

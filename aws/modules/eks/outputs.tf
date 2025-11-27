@@ -50,3 +50,7 @@ output "node_group_name"{
     description = "기본 NodeGroup 이름"
     value = aws_eks_node_group.default.node_group_name
 }
+
+output "cluster_sg_id" {
+  value = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+}

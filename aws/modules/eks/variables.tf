@@ -60,12 +60,6 @@ variable "cluster_additional_sg_ids" {
   default = []
 }
 
-#EKS NodeGroup에 사용할 SG(Network 모듈에서 만들어진 node_sg_id)
-variable "node_sg_id" {
-  description = "EKS 워커 노드용 Security Group ID"
-  type = string
-}
-
 variable "mgmt_sg_id" {
   description = "EKS Control Node 접근할 MGMT"
   type = string

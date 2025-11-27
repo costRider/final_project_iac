@@ -54,7 +54,7 @@ resource "aws_db_instance" "petclinic" {
   port                    = 5432
 
   db_subnet_group_name   = aws_db_subnet_group.petclinic.name
-  vpc_security_group_ids  = [var.db_sg_id]
+  vpc_security_group_ids  = [aws_security_group.db.id]
 
   multi_az                = false           # 필요시 true
   publicly_accessible     = false
@@ -71,4 +71,41 @@ resource "aws_db_instance" "petclinic" {
 
 #############################
 # RDS 생성 종료
+#############################
+
+#############################
+# RDS Security Group 생성 
+#############################
+
+resource "aws_security_group" "db" {
+  name        = "${local.name_prefix}-db-sg-db-01"
+  description = "DB security group"
+  vpc_id      =  var.vpc_id 
+
+  tags = merge(var.common_tags, {
+    Name = "${local.name_prefix}-db-sg-db-01"
+  })
+}
+
+resource "aws_security_group_rule" "db_ingress_from_Node" {
+  type              = "ingress"
+  description       = "Allow db inbound traffic from node"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  source_security_group_id = var.cluster_sg_id
+  security_group_id = aws_security_group.db.id
+}
+
+resource "aws_security_group_rule" "db_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.db.id
+}
+
+#############################
+# RDS Security Group 생성 종료
 #############################
