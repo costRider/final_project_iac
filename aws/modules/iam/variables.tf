@@ -11,7 +11,7 @@
 #
 # 관리 정보:
 #   - 최초 작성일: 2025-11-22
-#   - 최근 수정일: 2025-11-22
+#   - 최근 수정일: 2025-11-30
 #   - 작성자: LMK
 #   - 마지막 수정자: LMK
 #
@@ -21,6 +21,7 @@
 #
 # 변경 이력:
 #   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
+#   - 2025-11-30 / CI 용 변수 업데이트 / 작성자: LMK 
 #
 # 주의 사항:
 #   - 이 모듈은 <AWS> 전용입니다.
@@ -35,5 +36,20 @@ variable "project_name" {
 
 variable "environment" {
   description = "enV"
+  type = string
+}
+
+variable "github_owner" {
+  description = "GitHub user or org name that owns the petclinic repo"
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository name for petclinic"
+  type        = string
+}
+
+variable "petclinic_ecr_arn" {
+  description = "Petclinic ECR ARN"
   type = string
 }

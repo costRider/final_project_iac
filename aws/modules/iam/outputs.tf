@@ -11,7 +11,7 @@
 #
 # 관리 정보:
 #   - 최초 작성일: 2025-11-22
-#   - 최근 수정일: 2025-11-22
+#   - 최근 수정일: 2025-11-30
 #   - 작성자: LMK
 #   - 마지막 수정자: LMK
 #
@@ -21,6 +21,7 @@
 #
 # 변경 이력:
 #   - 2025-11-22 / 관리용 헤더 템플릿 업데이트 / 작성자: LMK 
+#   - 2025-11-30 / github action용 role / 작성자: LMK 
 #
 # 주의 사항:
 #   - 이 모듈은 <AWS> 전용입니다.
@@ -49,4 +50,9 @@ output "petclinic_pod_role_arn" {
 
 output "lbc_role_arn" {
   value = aws_iam_role.lbc.arn
+}
+
+output "github_actions_role_arn" {
+  description = "IAM Role ARN for GitHub Actions to assume via OIDC"
+  value       = aws_iam_role.github_actions.arn
 }
