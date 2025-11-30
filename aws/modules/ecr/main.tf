@@ -31,6 +31,9 @@ resource "aws_ecr_repository" "petclinic" {
 
   image_tag_mutability = "MUTABLE"
 
+  #삭제 시 내용도 같이 강제 삭제
+  force_delete = true
+
   image_scanning_configuration {
     scan_on_push = true
   }
