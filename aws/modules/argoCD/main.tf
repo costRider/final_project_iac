@@ -44,11 +44,10 @@ resource "helm_release" "argocd" {
   }
 
   # (옵션) admin 패스워드 해시 주입
-  dynamic "set_sensitive" {
-    for_each = var.admin_password_bcrypt != "" ? [1] : []
-    content {
+  set_sensitive = var.admin_password_bcrypt != "" ? [
+    {
       name  = "configs.secret.argocdServerAdminPassword"
       value = var.admin_password_bcrypt
     }
-  }
+  ] : []
 }
