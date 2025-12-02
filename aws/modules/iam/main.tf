@@ -47,11 +47,14 @@ resource "aws_iam_role" "mgmt" {
 # EKS Cluster 컨트롤 IAM 정책 생성 
 resource "aws_iam_policy" "mgmt_eks_required_api" {
   name        = "${var.project_name}-mgmt-eks-required-api"
-  description = "Required IAM permissions to access EKS clusters as per AWS documentation"
+  description = "Required IAM permissions for mgmt EC2 to access EKS and manage Terraform remote state"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      ### -----------------------------
+      ### 1) EKS 기본 API 접근 권한
+      ### -----------------------------
       {
         Sid    = "EksRequiredAPIActions",
         Effect = "Allow",
@@ -73,6 +76,10 @@ resource "aws_iam_policy" "mgmt_eks_required_api" {
         ],
         Resource = "*"
       },
+
+      ### -----------------------------
+      ### 2) IAM / STS (EKS Auth 용)
+      ### -----------------------------
       {
         Sid    = "IamAndSts",
         Effect = "Allow",
@@ -82,10 +89,36 @@ resource "aws_iam_policy" "mgmt_eks_required_api" {
           "sts:AssumeRole"
         ],
         Resource = "*"
-      }
+      },
+
+      ### -----------------------------
+      ### 3) Terraform S3 Backend 접근
+      ### -----------------------------
+      {
+        Sid    = "TerraformStateBucketObjects",
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ],
+        Resource = "*"
+      },
+      {
+        Sid    = "TerraformStateBucketMeta",
+        Effect = "Allow",
+        Action = [
+          "s3:ListBucket",
+          "s3:GetBucketLocation",
+          "s3:GetBucketVersioning"
+        ],
+        Resource = "*"
+      },
+
     ]
   })
 }
+
 
 # 생성한 정책 붙이기
 resource "aws_iam_role_policy_attachment" "mgmt_eks_required_api_attach" {
