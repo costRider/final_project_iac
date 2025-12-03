@@ -190,41 +190,6 @@ resource "aws_iam_role_policy_attachment" "petclinic_pod_attach" {
   policy_arn = aws_iam_policy.petclinic_pod_policy.arn
 }
 
-
-# LBC용 IAM Policy
-resource "aws_iam_policy" "lbc" {
-  name        = "${var.project_name}-${var.environment}-AWSLoadBalancerControllerIAMPolicy"
-  description = "IAM policy for AWS Load Balancer Controller"
-
-  policy = file("${path.module}/iam_policy_aws_load_balancer_controller.json")
-}
-
-# LBC용 IAM Role (Pod Identity 기준 예시)
-resource "aws_iam_role" "lbc" {
-  name = "${var.project_name}-AmazonEKSLoadBalancerControllerRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "pods.eks.amazonaws.com"
-        }
-        Action = [
-          "sts:AssumeRole",
-          "sts:TagSession"
-        ]
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lbc_attach" {
-  role       = aws_iam_role.lbc.name
-  policy_arn = aws_iam_policy.lbc.arn
-}
-
 # 계정당 하나만 있으면 됨 중복생성 안하도록 조심..
 
 resource "aws_iam_openid_connect_provider" "github" {

@@ -48,10 +48,6 @@ output "petclinic_pod_role_arn" {
   value = aws_iam_role.petclinic_pod_role.arn
 }
 
-output "lbc_role_arn" {
-  value = aws_iam_role.lbc.arn
-}
-
 output "github_actions_role_arn" {
   description = "IAM Role ARN for GitHub Actions to assume via OIDC"
   value       = aws_iam_role.github_actions.arn
