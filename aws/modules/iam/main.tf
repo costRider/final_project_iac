@@ -119,6 +119,11 @@ resource "aws_iam_policy" "mgmt_eks_required_api" {
   })
 }
 
+# Infra를 관리하는 수준으로 전환하여 Admin 권한부여
+resource "aws_iam_role_policy_attachment" "mgmt_admin" {
+  role       = aws_iam_role.mgmt.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
 
 # 생성한 정책 붙이기
 resource "aws_iam_role_policy_attachment" "mgmt_eks_required_api_attach" {
