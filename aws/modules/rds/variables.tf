@@ -59,10 +59,14 @@ variable "common_tags" {
   type        = map(string)
 }
 
+variable "master_user_secret_kms_key_arn" {
+  type      = string
+  default   = null
+  nullable  = true
+  # 없으면 AWS 기본 KMS 키 사용
+}
+
 variable "vpc_id"          { type = string }
 variable "db_subnet_ids"   { type = list(string) } # PRIVATE DB Subnets
-variable "db_username"     { type = string }
-variable "db_password"     { type = string }
-variable "cluster_sg_id" {
-  type = string
-}
+
+variable "cluster_sg_id" {  type = string }

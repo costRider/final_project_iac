@@ -49,8 +49,11 @@ resource "aws_db_instance" "petclinic" {
   # engine_version          = "16.3"          # 필요시 조정
   instance_class          = "db.t3.micro"   # 실습이면 이 정도
   db_name                 = "petclinic"
-  username                = var.db_username
-  password                = var.db_password
+  username                = "petclinic"
+  
+  manage_master_user_password = true
+  master_user_secret_kms_key_id = var.master_user_secret_kms_key_arn
+
   port                    = 5432
 
   db_subnet_group_name   = aws_db_subnet_group.petclinic.name

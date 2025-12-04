@@ -54,3 +54,13 @@ output "node_group_name"{
 output "cluster_sg_id" {
   value = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
 }
+
+output "oidc_provider_arn" {
+  description = "IAM OIDC provider ARN for IRSA"
+  value       = aws_iam_openid_connect_provider.eks.arn
+}
+
+output "oidc_provider_url" {
+  description = "OIDC issuer URL"
+  value       = aws_iam_openid_connect_provider.eks.url
+}
