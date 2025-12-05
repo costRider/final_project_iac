@@ -225,9 +225,13 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
 
-      # 특정 repo만 허용
+      # 특정 repo만 허용 / 다른 repo 허용
       values = [
-        "repo:${var.github_owner}/${var.github_repo}:*"
+        # 테라폼 변수로 넘긴 기본 레포 (예: main CI용)
+        "repo:${var.github_owner}/${var.github_repo}:ref:refs/heads/*",
+
+        # 추가로 허용할 리포 패턴 (multicloud-failover 밑에 다른 브랜치도 허용)
+        "repo:multicloud-failover/*:ref:refs/heads/*"
       ]
     }
 
