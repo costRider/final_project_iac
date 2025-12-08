@@ -40,6 +40,12 @@ resource "aws_db_subnet_group" "petclinic" {
   })
 }
 
+# 0) 패스워드 랜덤 생성 (코드/var에 안 나옴)
+resource "random_password" "petclinic_master" {
+  length  = 20
+  special = true
+}
+
 #인스턴스 생성
 resource "aws_db_instance" "petclinic" {
   identifier            = "${var.project_name}-${var.environment}-postgres"
@@ -51,8 +57,9 @@ resource "aws_db_instance" "petclinic" {
   db_name                 = "petclinic"
   username                = "petclinic"
   
-  manage_master_user_password = true
-  master_user_secret_kms_key_id = var.master_user_secret_kms_key_arn
+  manage_master_user_password = false #aws 자동생성 안함
+  master_user_secret_kms_key_id = var.master_user_secret_kms_key_arn # 여기선 필요없음
+  password = random_password.petclinic_master.result  #무작위 비밀번호 할당
 
   port                    = 5432
 
@@ -69,6 +76,25 @@ resource "aws_db_instance" "petclinic" {
 
    tags = merge(var.common_tags, {
     Name = "${var.project_name}-${var.environment}-rds"
+  })
+}
+
+# 2) 우리만의 고정 이름 Secret (env별로 패턴 유지)
+resource "aws_secretsmanager_secret" "petclinic_db" {
+  name = "/${var.project_name}/${var.environment}/petclinic-db"
+}
+
+# 3) Secret 안에 DB 연결 정보 싹 다 저장
+resource "aws_secretsmanager_secret_version" "petclinic_db_value" {
+  secret_id = aws_secretsmanager_secret.petclinic_db.id
+
+  secret_string = jsonencode({
+    username = aws_db_instance.petclinic.username
+    password = random_password.petclinic_master.result
+    host     = aws_db_instance.petclinic.address
+    port     = 5432
+    database = "petclinic"
+    jdbc_url = "jdbc:postgresql://${aws_db_instance.petclinic.address}:5432/petclinic"
   })
 }
 
