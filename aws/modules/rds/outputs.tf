@@ -43,10 +43,3 @@ output "petclinic_db_name" {
 output "petclinic_db_username"{
   value = aws_db_instance.petclinic.username
 }
-
-# 🔹 추가: 마스터 유저 Secret ARN
-output "master_user_secret_arn" {
-  description = "Secrets Manager ARN for the RDS master user password"
-  # master_user_secret는 리스트라 [0]
-  value       = aws_db_instance.petclinic.master_user_secret[0].secret_arn
-}
