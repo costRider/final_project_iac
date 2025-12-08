@@ -57,8 +57,6 @@ resource "aws_db_instance" "petclinic" {
   db_name                 = "petclinic"
   username                = "petclinic"
   
-  manage_master_user_password = false #aws 자동생성 안함
-  master_user_secret_kms_key_id = var.master_user_secret_kms_key_arn # 여기선 필요없음
   password = random_password.petclinic_master.result  #무작위 비밀번호 할당
 
   port                    = 5432
