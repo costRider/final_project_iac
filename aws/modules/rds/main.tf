@@ -59,6 +59,7 @@ resource "aws_db_instance" "petclinic" {
   db_name                 = "petclinic"
   username                = "petclinic"
   
+  
   password = random_password.petclinic_master.result  #무작위 비밀번호 할당
 
   port                    = 5432
