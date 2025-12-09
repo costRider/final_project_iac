@@ -40,10 +40,12 @@ resource "aws_db_subnet_group" "petclinic" {
   })
 }
 
-# 0) 패스워드 랜덤 생성 (코드/var에 안 나옴)
+# 0) 패스워드 랜덤 생성 (코드/var에 안 나옴) 특문치환
 resource "random_password" "petclinic_master" {
   length  = 20
   special = true
+
+  override_special = "!#$%&()*+,-.:;<=>?[]^_{|}~"
 }
 
 #인스턴스 생성
@@ -85,7 +87,7 @@ resource "aws_secretsmanager_secret" "petclinic_db" {
 # 3) Secret 안에 DB 연결 정보 싹 다 저장
 resource "aws_secretsmanager_secret_version" "petclinic_db_value" {
   secret_id = aws_secretsmanager_secret.petclinic_db.id
-
+  
   secret_string = jsonencode({
     username = aws_db_instance.petclinic.username
     password = random_password.petclinic_master.result
