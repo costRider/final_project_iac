@@ -12,7 +12,6 @@ terraform {
     bucket = "final-terraform-gcs"
     prefix = "gcp/env/dev"
   }
-
 }
 
 provider "google" {
