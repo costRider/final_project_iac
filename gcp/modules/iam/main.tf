@@ -35,6 +35,14 @@ resource "google_project_iam_member" "mgmt_project_admin" {
   member  = "serviceAccount:${google_service_account.mgmt[0].email}"
 }
 
+#GCP 관리를 위한 Container Admin 권한도 부여
+resource "google_project_iam_member" "mgmt_container_admin" {
+  count   = var.enable_mgmt_sa ? 1 : 0
+  project = var.project_id
+  role    = "roles/container.admin" # 또는 "roles/owner" (진짜 풀관리자)
+  member  = "serviceAccount:${google_service_account.mgmt[0].email}"
+}
+
 resource "google_storage_bucket_iam_member" "mgmt_tf_state" {
   bucket = "final-terraform-gcs"
   role   = "roles/storage.objectAdmin"

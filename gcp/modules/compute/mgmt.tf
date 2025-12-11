@@ -22,6 +22,14 @@ resource "google_compute_instance" "mgmt" {
       ssh-keys = "debian:${var.bastion_public_key}"
   }
 
+    # 부트스트랩 스크립트
+  metadata_startup_script = templatefile("${path.module}/templates/mgmt_startup.sh", {
+    terraform_version = var.terraform_version
+    cluster_name      = var.gke_cluster_name
+    region            = var.region
+    project_id        = var.project_id
+  })
+
   # mgmt SA = GCP 인프라 컨트롤러
   service_account {
     email  = var.mgmt_sa_email

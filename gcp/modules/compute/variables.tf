@@ -37,3 +37,12 @@ variable "mgmt_sa_email" {
   description = "Service Account email for mgmt VM"
   type        = string
 }
+
+variable "terraform_version" {
+  type    = string
+  default = "1.14.0"
+}
+
+variable "gke_cluster_name" {
+  type = string
+}
