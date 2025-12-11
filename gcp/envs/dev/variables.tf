@@ -6,8 +6,8 @@ variable "project_id" {
 
 variable "gcp_zone" {
   description = "존 설정"
-  type        = string
-  default     = "asia-northeast3-a"
+  type        = list(string)
+  default     = ["asia-northeast3-a", "asia-northeast3-c"]
 }
 
 variable "environment" {
@@ -57,4 +57,8 @@ variable "subnets" {
     region        = string
     role          = string
   }))
+}
+
+variable "bastion_ssh_public_key" {
+  type = string
 }

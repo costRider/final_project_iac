@@ -1,7 +1,7 @@
 ##################################
 # resource가 필요로 하는 firewall rule을 생성
 ##################################
-
+/*
 # 내부 전체 트래픽 허용 (VPC 내부 통신)
 resource "google_compute_firewall" "internal_all" {
   name    = "${var.network_name}-allow-internal"
@@ -15,7 +15,9 @@ resource "google_compute_firewall" "internal_all" {
   allow {
     protocol = "all"
   }
-}
+}*/
+
+
 
 # Bastion SSH (tags=["bastion"] 달린 인스턴스만 대상)
 resource "google_compute_firewall" "ssh_bastion" {
@@ -29,6 +31,24 @@ resource "google_compute_firewall" "ssh_bastion" {
   priority     = 1000
   target_tags  = ["bastion"]
   source_ranges = var.ssh_source_ranges
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+}
+
+
+resource "google_compute_firewall" "ssh_bastion_to_mgmt" {
+  name    = "${var.network_name}-ssh-bastion-to-mgmt"
+  project = var.project_id
+  network = var.network_name
+
+  direction = "INGRESS"
+  priority  = 1000
+
+  target_tags = ["mgmt"]
+  source_tags = ["bastion"]
 
   allow {
     protocol = "tcp"

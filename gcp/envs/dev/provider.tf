@@ -18,5 +18,5 @@ provider "google" {
   # Configuration options
   project = var.project_id
   region  = var.gcp_region
-  zone    = var.gcp_zone
+  zone    = var.gcp_zone[0] # 기본 zone 설정이 없으면 provider zone을 default로 사용
 }
