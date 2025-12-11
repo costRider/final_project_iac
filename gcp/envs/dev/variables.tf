@@ -1,35 +1,35 @@
-variable "project_id"{
-    description = "프로젝트 ID"
-    type = string
-    default = "kdt2-final-project-t2"
+variable "project_id" {
+  description = "프로젝트 ID"
+  type        = string
+  default     = "kdt2-final-project-t2"
 }
 
 variable "gcp_zone" {
   description = "존 설정"
-  type = string
-  default = "asia-northeast3-a"
+  type        = string
+  default     = "asia-northeast3-a"
 }
 
 variable "environment" {
   description = "환경 Dev/Prd/Stg"
-  type = string
+  type        = string
 }
 
 variable "gcp_region" {
   description = "Region"
-  type = string
-  default = "asia-northeast3"
+  type        = string
+  default     = "asia-northeast3"
 }
 
-variable "owner"{
-    description = "리소스 소유자"
-    type = string
-    default = "mklee"
+variable "owner" {
+  description = "리소스 소유자"
+  type        = string
+  default     = "mklee"
 }
 
-variable "cost_center"{
-    description = "비용주체"
-    type = string
+variable "cost_center" {
+  description = "비용주체"
+  type        = string
 }
 
 variable "cluster_name" {
