@@ -39,7 +39,7 @@ resource "google_project_iam_member" "mgmt_project_admin" {
 resource "google_project_iam_member" "mgmt_container_admin" {
   count   = var.enable_mgmt_sa ? 1 : 0
   project = var.project_id
-  role    = "roles/container.admin" # 또는 "roles/owner" (진짜 풀관리자)
+  role    = "roles/container.admin" 
   member  = "serviceAccount:${google_service_account.mgmt[0].email}"
 }
 
@@ -72,8 +72,20 @@ resource "google_project_iam_member" "gke_node_monitoring" {
   member  = "serviceAccount:${google_service_account.gke_node[0].email}"
 }
 
+########################################
+# Artifact Registry 권한 (Project 단위)
+########################################
+
+# GKE Node → 이미지 Pull
+resource "google_project_iam_member" "gke_node_artifact_reader" {
+  count   = var.enable_gke_sa ? 1 : 0
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.gke_node[0].email}"
+}
+
 ############################
-# 3) GKE Workload용 GSA (나중에 Workload Identity 연결)
+# 3) GKE Workload용 GSA (Workload Identity 연결)
 ############################
 resource "google_service_account" "gke_workload" {
   count        = var.enable_gke_sa ? 1 : 0

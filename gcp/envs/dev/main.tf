@@ -1,3 +1,4 @@
+#API 활성화를 위한 Service load 
 resource "google_project_service" "required_apis" {
   for_each = toset([
     "compute.googleapis.com",
@@ -19,7 +20,7 @@ resource "google_project_service" "required_apis" {
 module "network" {
   source       = "../../modules/network"
   project_id   = var.project_id
-  network_name = "vpc-dr-dev"
+  network_name = var.network_name
   subnets      = var.subnets
 
   enable_nat = true
@@ -71,7 +72,28 @@ module "gke" {
 
   gke_zones = var.gcp_zone
 
-  min_node_count    = 1
-  max_node_count    = 3
-  node_machine_type = "e2-standard-2"
+  min_node_count    = var.min_node_count
+  max_node_count    = var.max_node_count
+  node_machine_type = var.node_machine_type
 }
+
+module "artifact_registry" {
+  source     = "../../modules/artifact_registry"
+  project_id = var.project_id
+  region     = var.gcp_region
+
+  repos = {
+    petclinic = { format = "DOCKER" }
+    # obs      = { format = "DOCKER" }
+  }
+}
+
+module "workload_identity_petclinic" {
+  source = "../../modules/workload_identity"
+
+  project_id           = var.project_id
+  gsa_email            = module.iam.gke_workload_sa_email
+  k8s_namespace        = var.k8s_namespace
+  k8s_service_account  = var.k8s_service_account
+}
+
