@@ -59,7 +59,7 @@ variable "subnets" {
   }))
 }
 
-variable "network_name"{
+variable "network_name" {
   type = string
 }
 
@@ -67,26 +67,26 @@ variable "bastion_ssh_public_key" {
   type = string
 }
 
-variable "vpc-dr-dev"{
+variable "k8s_namespace" {
   type = string
 }
 
-variable "k8s_namespace"{
+variable "k8s_service_account" {
   type = string
 }
 
-variable "k8s_service_account"{
+variable "repository_id" {
   type = string
 }
 
-variable "node_machine_type"{
+variable "node_machine_type" {
   type = string
 }
 
-variable "min_node_count"{
+variable "min_node_count" {
   type = number
 }
 
-variable "max_node_count"{
+variable "max_node_count" {
   type = number
 }

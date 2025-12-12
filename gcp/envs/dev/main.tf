@@ -83,7 +83,7 @@ module "artifact_registry" {
   region     = var.gcp_region
 
   repos = {
-    petclinic = { format = "DOCKER" }
+    "${var.repository_id}" = { format = "DOCKER" }
     # obs      = { format = "DOCKER" }
   }
 }
@@ -91,9 +91,9 @@ module "artifact_registry" {
 module "workload_identity_petclinic" {
   source = "../../modules/workload_identity"
 
-  project_id           = var.project_id
-  gsa_email            = module.iam.gke_workload_sa_email
-  k8s_namespace        = var.k8s_namespace
-  k8s_service_account  = var.k8s_service_account
+  project_id          = var.project_id
+  gsa_email           = module.iam.gke_workload_sa_email
+  k8s_namespace       = var.k8s_namespace
+  k8s_service_account = var.k8s_service_account
 }
 
