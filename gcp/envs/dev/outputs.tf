@@ -25,3 +25,11 @@ output "cluster_name" {
 output "gke_workload_sa_email" {
   value = module.iam.gke_workload_sa_email
 }
+
+output "project_id"{
+  value = var.project_id
+}
+
+output "region"{
+  value = var.gcp_region
+}
