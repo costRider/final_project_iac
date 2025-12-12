@@ -92,7 +92,7 @@ module "workload_identity_petclinic" {
   source = "../../modules/workload_identity"
 
   project_id          = var.project_id
-  gsa_email           = module.iam.gke_workload_sa_email
+  gsa_email           = module.oidc_wif.github_ci_sa_email
   k8s_namespace       = var.k8s_namespace
   k8s_service_account = var.k8s_service_account
 }

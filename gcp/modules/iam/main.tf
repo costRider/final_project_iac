@@ -104,17 +104,3 @@ resource "google_project_iam_member" "gke_workload_secret_accessor" {
 # - roles/secretmanager.secretAccessor
 # - roles/cloudsql.client
 # 같은 걸 여기에 incrementally 추가하면 됨.
-
-############################
-# CI (GitHub Actions)용 GSA
-############################
-resource "google_service_account" "github_ci" {
-  account_id   = "sa-github-ci"
-  display_name = "GitHub Actions CI Service Account"
-}
-
-resource "google_project_iam_member" "github_ci_artifact_writer" {
-  project = var.project_id
-  role    = "roles/artifactregistry.writer"
-  member  = "serviceAccount:${google_service_account.github_ci.email}"
-}

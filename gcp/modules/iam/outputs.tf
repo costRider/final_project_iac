@@ -12,7 +12,7 @@ output "gke_node_sa_email" {
   description = "GKE node SA email"
 }
 
-output "gke_workload_sa_email" {
-  value       = try(google_service_account.gke_workload[0].email, null)
-  description = "GKE workload GSA email"
+output "gke_workload_sa_email"{
+  value = try(google_service_account.gke_workload[0].email,null)
+  description = "GKE workload SA email"
 }
