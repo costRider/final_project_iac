@@ -93,7 +93,28 @@ resource "google_service_account" "gke_workload" {
   display_name = "GKE Workload Service Account"
 }
 
+resource "google_project_iam_member" "gke_workload_secret_accessor" {
+  count   = var.enable_gke_sa ? 1 : 0
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.gke_workload[0].email}"
+}
+
 # 아직은 큰 권한 안 줌. 나중에 필요시:
 # - roles/secretmanager.secretAccessor
 # - roles/cloudsql.client
 # 같은 걸 여기에 incrementally 추가하면 됨.
+
+############################
+# CI (GitHub Actions)용 GSA
+############################
+resource "google_service_account" "github_ci" {
+  account_id   = "sa-github-ci"
+  display_name = "GitHub Actions CI Service Account"
+}
+
+resource "google_project_iam_member" "github_ci_artifact_writer" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.github_ci.email}"
+}

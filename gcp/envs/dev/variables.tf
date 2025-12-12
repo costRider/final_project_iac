@@ -90,3 +90,19 @@ variable "min_node_count" {
 variable "max_node_count" {
   type = number
 }
+
+variable "github_owner" {
+  type = string
+}
+
+variable "github_repo" {
+  type = string
+}
+
+variable "wif_pool_id" {
+  type = string
+}
+
+variable "wif_provider_id" {
+  type = string
+} 

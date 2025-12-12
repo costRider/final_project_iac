@@ -1,7 +1,7 @@
 output "repo_urls" {
-  description = "각 repo의 풀 URL (asia-...-docker.pkg.dev/... 형식)"
+  description = "Artifact Registry repository URLs"
   value = {
     for k, v in google_artifact_registry_repository.this :
-    k => v.repository_url
+    k => "${v.location}-docker.pkg.dev/${v.project}/${v.repository_id}"
   }
 }

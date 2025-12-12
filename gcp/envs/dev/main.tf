@@ -97,3 +97,14 @@ module "workload_identity_petclinic" {
   k8s_service_account = var.k8s_service_account
 }
 
+module "oidc_wif" {
+  source = "../../modules/oidc_wif"
+
+  project_id = var.project_id
+
+  github_owner    = var.github_owner
+  github_repo     = var.github_repo
+  wif_pool_id     = var.wif_pool_id
+  wif_provider_id = var.wif_provider_id
+
+}

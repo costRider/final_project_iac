@@ -28,7 +28,6 @@ resource "google_container_cluster" "this" {
   }
 }
 
-
   # logging / monitoring 기본값 사용
   logging_service    = "logging.googleapis.com/kubernetes"
   monitoring_service = "monitoring.googleapis.com/kubernetes"
