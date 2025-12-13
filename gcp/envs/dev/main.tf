@@ -57,7 +57,7 @@ module "compute" {
 
   gke_cluster_name       = module.gke.cluster_name
   github_owner           = "costRider"
-  github_repo            = "final-project_iac_addon-"
+  github_repo            = "final_project_iac_addon-"
   github_pat_secret_name = "github-pat-actions"
 }
 module "gke" {
