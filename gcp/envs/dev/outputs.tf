@@ -26,10 +26,10 @@ output "gke_workload_sa_email" {
   value = module.iam.gke_workload_sa_email
 }
 
-output "project_id"{
+output "project_id" {
   value = var.project_id
 }
 
-output "region"{
+output "region" {
   value = var.gcp_region
 }
