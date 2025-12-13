@@ -46,3 +46,15 @@ variable "terraform_version" {
 variable "gke_cluster_name" {
   type = string
 }
+
+variable "github_owner"{
+  type = string
+}
+
+variable "github_repo"{
+  type = string
+}
+
+variable "github_pat_secret_name"{
+  type = string
+}

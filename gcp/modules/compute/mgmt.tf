@@ -22,13 +22,21 @@ resource "google_compute_instance" "mgmt" {
       ssh-keys = "debian:${var.bastion_public_key}"
   }
 
-    # 부트스트랩 스크립트
+   # 부트스트랩 스크립트
   metadata_startup_script = templatefile("${path.module}/templates/mgmt_startup.sh", {
     terraform_version = var.terraform_version
     cluster_name      = var.gke_cluster_name
     region            = var.region
     project_id        = var.project_id
+    github_owner = var.github_owner
+    github_repo = var.github_repo
+    github_pat_secret_name = var.github_pat_secret_name
+    runner_name = "mgmt-gcp-runner"
+    runner_labels = "self-hosted,mgmt,gcp"
+    auto_dispatch_workflow = "true"
+    dispatch_workflow_file = "gke-mgmt-addons.yaml"
   })
+
 
   # mgmt SA = GCP 인프라 컨트롤러
   service_account {

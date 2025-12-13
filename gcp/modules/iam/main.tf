@@ -49,6 +49,12 @@ resource "google_storage_bucket_iam_member" "mgmt_tf_state" {
   member = "serviceAccount:${google_service_account.mgmt[0].email}"
 }
 
+resource "google_project_iam_member" "mgmt_secret_accessor" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.mgmt[0].email}"
+}
+
 ############################
 # 2) GKE Node용 Service Account
 ############################

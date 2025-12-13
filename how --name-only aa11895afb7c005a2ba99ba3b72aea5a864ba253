@@ -1,0 +1,30 @@
+* [33mf97328d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m update gcp
+* [33maa11895[m update instance
+* [33m3c584e5[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m  update gcp info
+* [33mc895d9f[m update
+* [33m7ffaae0[m  update outputs
+* [33m23d55d4[m update gke&git IAM
+* [33m8323b58[m update
+* [33mb28cc60[m artifact registry update & workload identity
+* [33mc2c9bc2[m update gke-init
+* [33m398734b[m update bation&MGMT
+* [33m9e7fb6c[m update fmt
+* [33m12b161f[m update gcp networks
+* [33ma8b7679[m update gcp
+* [33md4177ba[m  update README
+* [33mc8ca8a9[m update README
+* [33m61b5d9b[m update
+* [33m8d42ead[m db password logic fixed
+* [33m5d89c8f[m update rds outputs
+* [33me815980[m update rds password
+* [33m3bed143[m update for secret
+* [33m8d3e0fa[m update github IAM github_actions_assume_role values
+* [33m555d340[m 2025-12-04 secret update
+* [33m33f7b46[m 2025-12-03
+* [33m794b4ef[m 2025-12-03
+* [33m703e83a[m 2025-12-03
+* [33m23ef8c3[m 2025-12-02 Study
+* [33m367a7c3[m 2025-12-02 argoCD main set sensitve
+* [33m226c8e0[m 2025-12-02 homeStudy
+* [33mb6b456a[m 2025-12-01 acamedy update
+* [33m30a18b4[m update ecr main

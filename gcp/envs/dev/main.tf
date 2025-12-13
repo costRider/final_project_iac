@@ -55,9 +55,11 @@ module "compute" {
   bastion_public_key = var.bastion_ssh_public_key
   mgmt_sa_email      = module.iam.mgmt_sa_email
 
-  gke_cluster_name = module.gke.cluster_name
+  gke_cluster_name       = module.gke.cluster_name
+  github_owner           = "costRider"
+  github_repo            = "final-project_iac_addon-"
+  github_pat_secret_name = "github-pat-actions"
 }
-
 module "gke" {
   depends_on   = [google_project_service.required_apis]
   source       = "../../modules/gke"
