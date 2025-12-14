@@ -56,6 +56,10 @@ variable "subnets" {
     ip_cidr_range = string
     region        = string
     role          = string
+    secondary_ranges = optional(list(object({
+      range_name    = string
+      ip_cidr_range = string
+    })))
   }))
 }
 

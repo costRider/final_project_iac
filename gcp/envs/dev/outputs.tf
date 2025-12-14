@@ -33,3 +33,7 @@ output "project_id" {
 output "region" {
   value = var.gcp_region
 }
+
+output "debug_subnets" {
+  value = var.subnets
+}
