@@ -12,12 +12,16 @@ variable "network_name" {
 
 #public(bastion), private{mgmt, app(gke), db}
 variable "subnets" {
-  description = "Subnets to create"
   type = list(object({
     name          = string
     ip_cidr_range = string
     region        = string
-    role          = string # "mgmt", "app", "db" 등 태그/설명용
+    role          = optional(string)
+
+    secondary_ranges = optional(list(object({
+      range_name    = string
+      ip_cidr_range = string
+    })))
   }))
 }
 

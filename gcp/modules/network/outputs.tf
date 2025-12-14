@@ -21,6 +21,14 @@ output "subnets" {
       region = v.region
       cidr   = v.ip_cidr_range
       self   = v.self_link
+
+      #GKE를 위한 secondary range
+       secondary_ranges = [
+        for r in v.secondary_ip_range : {
+          range_name    = r.range_name
+          ip_cidr_range = r.ip_cidr_range
+        }
+      ]
     }
   }
 }

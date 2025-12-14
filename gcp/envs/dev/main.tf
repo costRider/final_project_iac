@@ -15,8 +15,6 @@ resource "google_project_service" "required_apis" {
   disable_on_destroy = false
 }
 
-
-
 module "network" {
   source       = "../../modules/network"
   project_id   = var.project_id
@@ -60,6 +58,7 @@ module "compute" {
   github_repo            = "final_project_iac_addon-"
   github_pat_secret_name = "github-pat-actions"
 }
+
 module "gke" {
   depends_on   = [google_project_service.required_apis]
   source       = "../../modules/gke"
@@ -70,13 +69,25 @@ module "gke" {
   network_name    = module.network.network_name
   subnet_app_name = module.network.subnets["subnet-app"].name
 
+  #pod/service 용 Secondary range name 전달 - (Subnet 작성)
+  pods_secondary_range_name = "pods-range"
+  svc_secondary_range_name  = "services-range"
+
   gke_node_sa_email = module.iam.gke_node_sa_email
 
   gke_zones = var.gcp_zone
 
-  min_node_count    = var.min_node_count
-  max_node_count    = var.max_node_count
-  node_machine_type = var.node_machine_type
+  node_machine_type_default = var.node_machine_type_default
+  node_machine_type_app     = var.node_machine_type_app
+  node_machine_type_obs     = var.node_machine_type_obs
+
+  app_min_node_count     = var.app_min_node_count
+  app_max_node_count     = var.app_max_node_count
+  obs_min_node_count     = var.obs_min_node_count
+  obs_max_node_count     = var.obs_max_node_count
+  default_min_node_count = var.default_min_node_count
+  default_max_node_count = var.default_max_node_count
+
 }
 
 module "artifact_registry" {

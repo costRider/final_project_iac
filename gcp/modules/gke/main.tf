@@ -19,6 +19,19 @@ resource "google_container_cluster" "this" {
   # ip_allocation_policy {
   #   use_ip_aliases = true
   # }
+  ip_allocation_policy {
+    cluster_secondary_range_name  = var.pods_secondary_range_name
+    services_secondary_range_name = var.svc_secondary_range_name
+  }
+
+  # Private Cluster 핵심
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = true
+
+    # Control plane이 사용하는 RFC1918 대역(/28 권장)
+    master_ipv4_cidr_block  = "172.31.255.0/28"
+  }
 
   # master API endpoint에 대한 접근 제어 (지금은 전체 허용, 나중에 mgmt CIDR로 좁히자)
  master_authorized_networks_config {
@@ -43,9 +56,96 @@ resource "google_container_cluster" "this" {
 
   deletion_protection = false
 }
+###############################################
+# GKE Node Pool (앱 노드)
+###############################################
+
+resource "google_container_node_pool" "app" {
+  name     = "${var.cluster_name}-np-app"
+  project  = var.project_id
+  location = google_container_cluster.this.location
+  cluster  = google_container_cluster.this.name
+
+  node_locations = var.gke_zones
+
+  autoscaling {
+    min_node_count = var.app_min_node_count
+    max_node_count = var.app_max_node_count
+  }
+
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
+
+  node_config {
+    machine_type    = var.node_machine_type_app
+    disk_size_gb    = var.node_disk_size_gb
+    disk_type       = var.node_disk_type
+    service_account = var.gke_node_sa_email
+
+    oauth_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+
+    labels = {
+      role      = "app"
+      nodegroup = "app"
+    }
+
+    taint {
+      key    = "role"
+      value  = "app"
+      effect = "NO_SCHEDULE"
+    }
+
+    tags = ["gke-node-app"]
+  }
+}
+###############################################
+# GKE Node Pool (모니터링 노드)
+###############################################
+resource "google_container_node_pool" "obs" {
+  name     = "${var.cluster_name}-np-obs"
+  project  = var.project_id
+  location = google_container_cluster.this.location
+  cluster  = google_container_cluster.this.name
+
+  node_locations = var.gke_zones
+
+  autoscaling {
+    min_node_count = var.obs_min_node_count
+    max_node_count = var.obs_max_node_count
+  }
+
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
+
+  node_config {
+    machine_type    = var.node_machine_type_obs
+    disk_size_gb    = var.node_disk_size_gb
+    disk_type       = var.node_disk_type
+    service_account = var.gke_node_sa_email
+
+    oauth_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+
+    labels = {
+      role      = "obs"
+      nodegroup = "obs"
+    }
+
+    taint {
+      key    = "role"
+      value  = "obs"
+      effect = "NO_SCHEDULE"
+    }
+
+    tags = ["gke-node-obs"]
+  }
+}
 
 ###############################################
-# GKE Node Pool (앱/기본 용도 한 개)
+# GKE Node Pool (앱/기본 용도)
 ###############################################
 
 resource "google_container_node_pool" "default" {
@@ -73,8 +173,8 @@ resource "google_container_node_pool" "default" {
   }
 
   autoscaling {
-    min_node_count = var.min_node_count
-    max_node_count = var.max_node_count
+    min_node_count = var.default_min_node_count
+    max_node_count = var.default_max_node_count
   }
 
   management {

@@ -79,15 +79,15 @@ variable "repository_id" {
   type = string
 }
 
-variable "node_machine_type" {
+variable "node_machine_type_default" {
   type = string
 }
 
-variable "min_node_count" {
+variable "default_min_node_count" {
   type = number
 }
 
-variable "max_node_count" {
+variable "default_max_node_count" {
   type = number
 }
 
@@ -105,4 +105,21 @@ variable "wif_pool_id" {
 
 variable "wif_provider_id" {
   type = string
-} 
+}
+
+variable "app_min_node_count" { type = number }
+variable "app_max_node_count" { type = number }
+variable "obs_min_node_count" { type = number }
+variable "obs_max_node_count" { type = number }
+
+variable "node_machine_type_app" { type = string }
+variable "node_machine_type_obs" { type = string }
+
+variable "node_disk_size_gb" {
+  type    = number
+  default = 50
+}
+variable "node_disk_type" {
+  type    = string
+  default = "pd-balanced"
+}
