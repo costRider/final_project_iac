@@ -53,6 +53,15 @@ resource "google_project_iam_member" "github_ci_artifact_writer" {
   member  = "serviceAccount:${google_service_account.github_ci.email}"
 }
 
+# WIF -> GSA Access Token 발급 허용 
+resource "google_service_account_iam_member" "github_ci_token_creator" {
+  service_account_id = google_service_account.github_ci.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+
+  member = "principalSet://iam.googleapis.com/projects/${data.google_project.this.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github.workload_identity_pool_id}/attribute.repository/${var.github_owner}/${var.github_repo}"
+}
+
+
 #####################################################
 # 4) WIF -> GSA Impersonation 허용 (핵심 바인딩)
 #####################################################
