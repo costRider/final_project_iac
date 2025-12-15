@@ -63,3 +63,9 @@ variable "vpc_id"          { type = string }
 variable "db_subnet_ids"   { type = list(string) } # PRIVATE DB Subnets
 
 variable "cluster_sg_id" {  type = string }
+
+variable "vpn_allowed_cidrs" {
+  description = "CIDRs allowed to access PostgreSQL via S2S VPN (e.g., GCP subnet ranges)"
+  type        = list(string)
+  default     = []
+}

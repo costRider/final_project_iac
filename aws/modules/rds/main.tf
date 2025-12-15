@@ -127,6 +127,17 @@ resource "aws_security_group_rule" "db_ingress_from_Node" {
   security_group_id = aws_security_group.db.id
 }
 
+resource "aws_security_group_rule" "db_ingress_from_vpn" {
+  count             = length(var.vpn_allowed_cidrs) > 0 ? 1 : 0
+  type              = "ingress"
+  description       = "Allow db inbound traffic from VPN CIDRs"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = var.vpn_allowed_cidrs
+  security_group_id = aws_security_group.db.id
+}
+
 resource "aws_security_group_rule" "db_egress_all" {
   type              = "egress"
   from_port         = 0
