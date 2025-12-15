@@ -106,6 +106,13 @@ resource "google_project_iam_member" "gke_workload_secret_accessor" {
   member  = "serviceAccount:${google_service_account.gke_workload[0].email}"
 }
 
+# external-secrets KSA -> sa-gke-workload GSA 사용 허용 (Workload Identity 핵심 바인딩)
+resource "google_service_account_iam_member" "eso_ksa_wi_user" {
+  service_account_id = google_service_account.gke_workload[0].name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[external-secrets/external-secrets]"
+}
+
 # 아직은 큰 권한 안 줌. 나중에 필요시:
 # - roles/secretmanager.secretAccessor
 # - roles/cloudsql.client
