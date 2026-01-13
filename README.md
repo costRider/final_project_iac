@@ -196,7 +196,7 @@ GitHub Actions → Addon 자동 배포(LBC, ArgoCD, ExternalSecrets 등)
 
 ---
 
-# 🔥 TL;DR (Bro Edition)
+# 🔥 Report
 
 - Terraform apply 한 번이면 **EKS + Addon + CI/CD Runner까지 자동 구성**
 - MGMT에 SSH 접속해서 helm 설치하던 시대 끝남
